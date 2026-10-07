@@ -15,12 +15,12 @@ type ClosingCtaProps = {
 
 export function ClosingCta({ page, closing, email, secondary }: ClosingCtaProps) {
   const fromPage = block(page, 'closing')
-  const eyebrow = closing?.eyebrow || fromPage?.label || 'Next form'
+  const eyebrow = closing?.eyebrow || fromPage?.label
   const title = closing?.title || fromPage?.title
   const accent = closing?.accent || fromPage?.kicker
   const description = closing?.body || fromPage?.body
-  const primaryLabel = closing?.primaryLabel || fromPage?.meta || 'Book a call'
-  const primaryHref = closing?.primaryHref || fromPage?.href || '/contact#book'
+  const primaryLabel = closing?.primaryLabel || fromPage?.meta
+  const primaryHref = closing?.primaryHref || fromPage?.href
   const secondaryLabel = closing?.secondaryLabel || secondary?.title
   const secondaryHref = closing?.secondaryHref || secondary?.href
 
@@ -58,9 +58,11 @@ export function ClosingCta({ page, closing, email, secondary }: ClosingCtaProps)
               {secondaryLabel && secondaryHref ? (
                 <CtaLink href={secondaryHref}>{secondaryLabel}</CtaLink>
               ) : null}
-              <CtaLink href={primaryHref} variant={secondaryLabel ? 'ghost' : 'primary'}>
-                {primaryLabel}
-              </CtaLink>
+              {primaryLabel && primaryHref ? (
+                <CtaLink href={primaryHref} variant={secondaryLabel ? 'ghost' : 'primary'}>
+                  {primaryLabel}
+                </CtaLink>
+              ) : null}
               <a
                 href={`mailto:${email}`}
                 className="inline-flex items-center gap-2 px-2 py-2 text-sm text-muted-foreground transition-colors hover:text-primary"

@@ -62,8 +62,8 @@ Hierarchy matches that scrape: Home, Work index, About, Contact, the BioBuild ca
 Sign in at `/admin`. Portfolio collections:
 
 - **Site settings** — name, email (`xtionace@gmail.com`), LinkedIn, location, nav, footer, the sticky “Book a call” label. Do not add a personal phone.
-- **Pages** — Home, Work, About, and Contact copy. Blocks are keyed (`hero-line-1`, `form-01`, `exp-01`, …). Change the words; leave the keys in place so the layout can find them.
-- **Projects** — the 12 work slots. BioBuild is filled. AT&T and T-Mobile stay “pending clearance” until real screenshots exist. Reserved slots are empty on purpose.
+- **Pages** — Home, Work, About, and Contact copy. Open the **Home** page. Blocks are keyed (`hero-line-1`, `log-heading`, `scroll-cue`, `selected`, `process`, `process-prefix`, `form-01`, `closing`, …). Change the words; leave the keys in place so the layout can find them. The homepage hero, session log, selected-work heading, process forms, and closing call to action all read these blocks.
+- **Projects** — the 12 work slots. Cards with **Show on rail** appear in the homepage Selected Work rail (title, summary, tags, status label, and image badge). BioBuild is filled. AT&T and T-Mobile stay “pending clearance” until real screenshots exist. Reserved slots are empty on purpose.
 - **Inquiries** — messages from the contact form. Nothing is emailed (no paid mail service). Reply yourself from the address in Site settings.
 - **Media** — optional uploads. The BioBuild plates currently use the CDN URLs already in the E scrape. Do not invent logos or stock photos.
 

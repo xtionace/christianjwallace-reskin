@@ -1,7 +1,13 @@
 import type { Payload } from 'payload'
 
-import { defaultPortfolio } from '@/content/portfolio'
-import type { PageDoc, ProjectContent, SiteSettingsContent } from '@/content/types'
+import { defaultPortfolio, projectChrome } from '@/content/portfolio'
+import type {
+  Block,
+  PageDoc,
+  ProjectContent,
+  SiteSettingsContent,
+  WorkStatus,
+} from '@/content/types'
 
 function labels(values: string[]) {
   return values.map((label) => ({ label }))
@@ -42,6 +48,8 @@ function mapProject(project: ProjectContent) {
     imageAlt: project.imageAlt,
     liveUrl: project.liveUrl,
     liveLabel: project.liveLabel,
+    statusLabel: project.statusLabel,
+    mediaBadge: project.mediaBadge,
     showOnRail: project.showOnRail,
     railOrder: project.railOrder,
     role: project.role,
@@ -83,6 +91,52 @@ function mapSettings(settings: SiteSettingsContent) {
   }
 }
 
+const homepageChrome: Block[] = [
+  { key: 'log-heading', label: 'Session log' },
+  { key: 'scroll-cue', label: 'Selected work' },
+  { key: 'process-prefix', label: 'Form' },
+]
+
+function chromeFor(status: unknown) {
+  if (status === 'filled' || status === 'tbd' || status === 'reserved') return projectChrome(status)
+  return projectChrome('reserved' satisfies WorkStatus)
+}
+
+/** Fill homepage labels that older seeds stored only in components. Does not overwrite editor text. */
+export async function ensureHomepageCopy(payload: Payload) {
+  const home = await payload.find({
+    collection: 'pages',
+    where: { slug: { equals: 'home' } },
+    limit: 1,
+    depth: 0,
+  })
+  const page = home.docs[0]
+  if (page) {
+    const blocks = Array.isArray(page.blocks) ? page.blocks : []
+    const keys = new Set(blocks.map((item) => (item && typeof item === 'object' ? item.key : '')))
+    const missing = homepageChrome.filter((item) => !keys.has(item.key))
+    if (missing.length > 0) {
+      await payload.update({
+        collection: 'pages',
+        id: page.id,
+        data: { blocks: [...blocks, ...missing] },
+      })
+      payload.logger.info('Added missing homepage blocks')
+    }
+  }
+
+  const projects = await payload.find({ collection: 'projects', limit: 50, depth: 0 })
+  for (const project of projects.docs) {
+    const chrome = chromeFor(project.status)
+    const data: { statusLabel?: string; mediaBadge?: string } = {}
+    if (project.statusLabel == null) data.statusLabel = chrome.statusLabel
+    if (project.mediaBadge == null) data.mediaBadge = chrome.mediaBadge
+    if (data.statusLabel !== undefined || data.mediaBadge !== undefined) {
+      await payload.update({ collection: 'projects', id: project.id, data })
+    }
+  }
+}
+
 export async function seedPortfolio(payload: Payload) {
   const settings = await payload.findGlobal({ slug: 'site-settings' })
   if (!settings.name) {
@@ -108,4 +162,6 @@ export async function seedPortfolio(payload: Payload) {
     }
     payload.logger.info('Seeded projects')
   }
+
+  await ensureHomepageCopy(payload)
 }

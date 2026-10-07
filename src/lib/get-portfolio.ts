@@ -128,6 +128,8 @@ function mapProject(value: unknown): ProjectContent | undefined {
     imageAlt: str(record.imageAlt),
     liveUrl: str(record.liveUrl),
     liveLabel: str(record.liveLabel),
+    statusLabel: str(record.statusLabel),
+    mediaBadge: str(record.mediaBadge),
     showOnRail: bool(record.showOnRail),
     railOrder: num(record.railOrder),
     role: str(record.role),

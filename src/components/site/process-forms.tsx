@@ -5,6 +5,7 @@ import type { PageDoc } from '@/content/types'
 
 export function ProcessForms({ page }: { page: PageDoc | undefined }) {
   const heading = block(page, 'process')
+  const prefix = block(page, 'process-prefix')
   const forms = blocksByPrefix(page, 'form-')
 
   return (
@@ -12,7 +13,7 @@ export function ProcessForms({ page }: { page: PageDoc | undefined }) {
       <div className="site-container py-24 md:py-32">
         <SectionHeading
           id="process-title"
-          eyebrow={heading?.label ?? 'Process'}
+          eyebrow={heading?.label}
           title={
             <>
               {heading?.title} <span className="text-muted-foreground">{heading?.kicker}</span>
@@ -29,7 +30,7 @@ export function ProcessForms({ page }: { page: PageDoc | undefined }) {
                   aria-hidden="true"
                 />
                 <span className="font-mono text-[11px] tracking-[0.2em] text-primary uppercase">
-                  Form {form.label}
+                  {prefix?.label} {form.label}
                 </span>
                 <h3 className="mt-6 font-display text-2xl font-semibold text-foreground">
                   {form.title}

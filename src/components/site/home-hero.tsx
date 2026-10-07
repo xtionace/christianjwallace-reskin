@@ -14,6 +14,8 @@ export function HomeHero({ page }: { page: PageDoc | undefined }) {
   const primary = block(page, 'hero-primary')
   const secondary = block(page, 'hero-secondary')
   const status = block(page, 'hero-status')
+  const logHeading = block(page, 'log-heading')
+  const scrollCue = block(page, 'scroll-cue')
   const session = blocksByPrefix(page, 'session-')
 
   return (
@@ -71,10 +73,10 @@ export function HomeHero({ page }: { page: PageDoc | undefined }) {
           </div>
         </div>
 
-        <aside aria-label="Session log" className="glass luminous rounded-2xl p-6">
+        <aside aria-label={logHeading?.label} className="glass luminous rounded-2xl p-6">
           <div className="mb-5 flex items-center justify-between gap-3">
             <span className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground/70 uppercase">
-              Session log
+              {logHeading?.label}
             </span>
             <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.16em] text-moss uppercase">
               <span className="relative flex size-2">
@@ -98,7 +100,7 @@ export function HomeHero({ page }: { page: PageDoc | undefined }) {
       </div>
 
       <div className="site-container relative flex items-center gap-3 pb-8 font-mono text-[11px] tracking-[0.2em] text-muted-foreground/60 uppercase">
-        <ArrowDown className="size-3.5" aria-hidden="true" /> Selected work
+        <ArrowDown className="size-3.5" aria-hidden="true" /> {scrollCue?.label}
       </div>
     </section>
   )

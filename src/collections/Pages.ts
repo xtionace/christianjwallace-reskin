@@ -47,7 +47,7 @@ export const Pages: CollectionConfig = {
       labels: { singular: 'Block', plural: 'Blocks' },
       admin: {
         description:
-          'Structured bits of copy (hero lines, process forms, résumé rows). The key field is how the page finds each block — keep keys stable.',
+          'Homepage keys: hero-eyebrow, hero-line-1, hero-line-2, hero-line-3, hero-body, hero-primary, hero-secondary, hero-status, log-heading, scroll-cue, session-01…04, selected, process, process-prefix, form-01…05, closing. Keep keys stable and edit the text fields.',
       },
       fields: [
         { name: 'key', type: 'text', required: true },

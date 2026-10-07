@@ -78,6 +78,8 @@ export type ProjectContent = {
   imageAlt: string
   liveUrl: string
   liveLabel: string
+  statusLabel: string
+  mediaBadge: string
   showOnRail: boolean
   railOrder: number
   role: string

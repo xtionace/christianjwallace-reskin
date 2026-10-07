@@ -193,7 +193,7 @@ export interface Page {
   headlineAccent?: string | null;
   lede?: string | null;
   /**
-   * Structured bits of copy (hero lines, process forms, résumé rows). The key field is how the page finds each block — keep keys stable.
+   * Homepage keys: hero-eyebrow, hero-line-1, hero-line-2, hero-line-3, hero-body, hero-primary, hero-secondary, hero-status, log-heading, scroll-cue, session-01…04, selected, process, process-prefix, form-01…05, closing. Keep keys stable and edit the text fields.
    */
   blocks?:
     | {
@@ -242,6 +242,14 @@ export interface Project {
   imageAlt?: string | null;
   liveUrl?: string | null;
   liveLabel?: string | null;
+  /**
+   * Small status line on the card (homepage rail and work index). Example: Case study.
+   */
+  statusLabel?: string | null;
+  /**
+   * Badge over the card image. Example: Live, or Screenshots pending clearance. Leave empty on reserved slots.
+   */
+  mediaBadge?: string | null;
   showOnRail?: boolean | null;
   railOrder?: number | null;
   role?: string | null;
@@ -514,6 +522,8 @@ export interface ProjectsSelect<T extends boolean = true> {
   imageAlt?: T;
   liveUrl?: T;
   liveLabel?: T;
+  statusLabel?: T;
+  mediaBadge?: T;
   showOnRail?: T;
   railOrder?: T;
   role?: T;

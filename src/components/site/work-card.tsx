@@ -76,12 +76,15 @@ export function WorkCard({
                   className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,var(--card))]"
                   aria-hidden="true"
                 />
-                <Badge
-                  variant="moss"
-                  className="absolute top-4 left-4 h-auto bg-background/70 px-2.5 py-1 font-mono text-[10px] tracking-[0.16em] uppercase backdrop-blur"
-                >
-                  <span className="size-1.5 rounded-full bg-moss" aria-hidden="true" /> Live
-                </Badge>
+                {item.mediaBadge ? (
+                  <Badge
+                    variant="moss"
+                    className="absolute top-4 left-4 h-auto bg-background/70 px-2.5 py-1 font-mono text-[10px] tracking-[0.16em] uppercase backdrop-blur"
+                  >
+                    <span className="size-1.5 rounded-full bg-moss" aria-hidden="true" />
+                    {item.mediaBadge}
+                  </Badge>
+                ) : null}
               </>
             ) : null}
             {item.status === 'tbd' ? (
@@ -97,14 +100,16 @@ export function WorkCard({
                 <span className="absolute -bottom-4 right-3 font-display text-[88px] leading-none font-bold text-white/4 select-none">
                   {item.title}
                 </span>
-                <div className="absolute inset-0 grid place-items-center">
-                  <Badge
-                    variant="crimson"
-                    className="h-auto px-3 py-1.5 font-mono text-[10px] tracking-[0.16em] uppercase"
-                  >
-                    <Lock aria-hidden="true" /> Screenshots pending clearance
-                  </Badge>
-                </div>
+                {item.mediaBadge ? (
+                  <div className="absolute inset-0 grid place-items-center">
+                    <Badge
+                      variant="crimson"
+                      className="h-auto px-3 py-1.5 font-mono text-[10px] tracking-[0.16em] uppercase"
+                    >
+                      <Lock aria-hidden="true" /> {item.mediaBadge}
+                    </Badge>
+                  </div>
+                ) : null}
               </div>
             ) : null}
             {item.status === 'reserved' ? (
@@ -132,11 +137,7 @@ export function WorkCard({
                       : 'text-muted-foreground/50'
                 }
               >
-                {item.status === 'filled'
-                  ? 'Case study'
-                  : item.status === 'tbd'
-                    ? 'Case study TBD'
-                    : 'Reserved'}
+                {item.statusLabel}
               </span>
             </div>
             <h3

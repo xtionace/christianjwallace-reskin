@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 
 type SectionHeadingProps = {
-  eyebrow: string
+  eyebrow?: string
   title: React.ReactNode
   description?: string
   action?: React.ReactNode

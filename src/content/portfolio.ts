@@ -1,4 +1,19 @@
-import type { PageDoc, Portfolio, ProjectClosing, ProjectContent } from '@/content/types'
+import type {
+  PageDoc,
+  Portfolio,
+  ProjectClosing,
+  ProjectContent,
+  WorkStatus,
+} from '@/content/types'
+
+/** Visible card chrome on the homepage rail and work index. Stored on each project. */
+export function projectChrome(status: WorkStatus): { statusLabel: string; mediaBadge: string } {
+  if (status === 'filled') return { statusLabel: 'Case study', mediaBadge: 'Live' }
+  if (status === 'tbd') {
+    return { statusLabel: 'Case study TBD', mediaBadge: 'Screenshots pending clearance' }
+  }
+  return { statusLabel: 'Reserved', mediaBadge: '' }
+}
 
 /** Magic Patterns CDN plates already used by template E. Do not replace with stock photos. */
 export const BIOBUILD_HERO =
@@ -68,6 +83,7 @@ function reserved(index: string): ProjectContent {
     imageAlt: '',
     liveUrl: '',
     liveLabel: '',
+    ...projectChrome('reserved'),
     showOnRail: index === '06',
     railOrder: index === '06' ? 3 : 0,
     role: '',
@@ -105,6 +121,7 @@ const biobuild: ProjectContent = {
   imageAlt: 'Bamboo-framed house with rice-husk block walls set in green Philippine hills at dusk',
   liveUrl: 'https://biobuildsystems.com',
   liveLabel: 'biobuildsystems.com',
+  ...projectChrome('filled'),
   showOnRail: true,
   railOrder: 0,
   role: 'Founder · Design & build',
@@ -200,6 +217,7 @@ const attPrimary: ProjectContent = {
   imageAlt: '',
   liveUrl: '',
   liveLabel: '',
+  ...projectChrome('tbd'),
   showOnRail: true,
   railOrder: 1,
   role: 'Principal Software Engineer',
@@ -240,6 +258,7 @@ const attSecondary: ProjectContent = {
   showOnRail: false,
   railOrder: 0,
   accent: 'crimson',
+  ...projectChrome('tbd'),
 }
 
 const tmobilePrimary: ProjectContent = {
@@ -256,6 +275,7 @@ const tmobilePrimary: ProjectContent = {
   imageAlt: '',
   liveUrl: '',
   liveLabel: '',
+  ...projectChrome('tbd'),
   showOnRail: true,
   railOrder: 2,
   role: 'Front-End Developer IV',
@@ -295,6 +315,7 @@ const tmobileSecondary: ProjectContent = {
   href: '/work/t-mobile',
   showOnRail: false,
   accent: 'crimson',
+  ...projectChrome('tbd'),
 }
 
 const home: PageDoc = {
@@ -312,6 +333,8 @@ const home: PageDoc = {
     { key: 'hero-primary', title: 'Book a call', href: '/contact#book' },
     { key: 'hero-secondary', title: 'See the work', href: '/work' },
     { key: 'hero-status', title: 'Open to select projects' },
+    { key: 'log-heading', label: 'Session log' },
+    { key: 'scroll-cue', label: 'Selected work' },
     { key: 'session-01', label: 'NOW', title: 'Principal SWE, AT&T' },
     { key: 'session-02', label: 'BUILDING', title: 'BioBuild Systems' },
     { key: 'session-03', label: 'BASED', title: 'Lynnwood / Seattle' },
@@ -332,6 +355,7 @@ const home: PageDoc = {
       kicker: 'Practiced every project.',
       body: 'Like a martial form, the process is the same sequence every time — and gets sharper with every repetition.',
     },
+    { key: 'process-prefix', label: 'Form' },
     {
       key: 'form-01',
       label: '01',

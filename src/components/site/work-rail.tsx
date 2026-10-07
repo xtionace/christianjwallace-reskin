@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 
 const railPadding = 'max(1.5rem, calc((100vw - 1320px) / 2 + 1.5rem))'
 
-export function WorkRail({ items }: { items: ProjectContent[] }) {
+export function WorkRail({ items, label }: { items: ProjectContent[]; label?: string }) {
   const trackRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(0)
 
@@ -63,7 +63,7 @@ export function WorkRail({ items }: { items: ProjectContent[] }) {
         style={{ paddingInline: railPadding, scrollPaddingInline: railPadding }}
         role="region"
         aria-roledescription="carousel"
-        aria-label="Selected work"
+        aria-label={label}
         tabIndex={0}
         onKeyDown={(event) => {
           if (event.key === 'ArrowRight') {

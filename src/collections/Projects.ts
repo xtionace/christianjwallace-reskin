@@ -73,6 +73,22 @@ export const Projects: CollectionConfig = {
             { name: 'imageAlt', type: 'text' },
             { name: 'liveUrl', type: 'text' },
             { name: 'liveLabel', type: 'text' },
+            {
+              name: 'statusLabel',
+              type: 'text',
+              admin: {
+                description:
+                  'Small status line on the card (homepage rail and work index). Example: Case study.',
+              },
+            },
+            {
+              name: 'mediaBadge',
+              type: 'text',
+              admin: {
+                description:
+                  'Badge over the card image. Example: Live, or Screenshots pending clearance. Leave empty on reserved slots.',
+              },
+            },
             { name: 'showOnRail', type: 'checkbox', defaultValue: false },
             { name: 'railOrder', type: 'number', defaultValue: 0 },
           ],

@@ -22,7 +22,7 @@ export default async function HomePage() {
         <div className="site-container mb-12">
           <SectionHeading
             id="selected-work-title"
-            eyebrow={selected?.label ?? 'Selected work'}
+            eyebrow={selected?.label}
             title={
               <>
                 {selected?.title} <span className="text-muted-foreground">{selected?.kicker}</span>
@@ -38,7 +38,7 @@ export default async function HomePage() {
             }
           />
         </div>
-        <WorkRail items={rail} />
+        <WorkRail items={rail} label={selected?.label} />
       </section>
       <ProcessForms page={page} />
       <ClosingCta page={page} email={portfolio.settings.email} />
