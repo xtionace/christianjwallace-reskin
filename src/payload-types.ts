@@ -69,6 +69,9 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    pages: Page;
+    projects: Project;
+    inquiries: Inquiry;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +81,9 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
+    projects: ProjectsSelect<false> | ProjectsSelect<true>;
+    inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -87,8 +93,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -163,6 +173,172 @@ export interface Media {
   focalY?: number | null;
 }
 /**
+ * Page copy for Home, Work, About, and Contact. Edit text here — the front end reads these documents.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  /**
+   * home, work, about, or contact. Used as the route key.
+   */
+  slug: string;
+  eyebrow?: string | null;
+  headline?: string | null;
+  /**
+   * Muted or gold second half of the headline.
+   */
+  headlineAccent?: string | null;
+  lede?: string | null;
+  /**
+   * Structured bits of copy (hero lines, process forms, résumé rows). The key field is how the page finds each block — keep keys stable.
+   */
+  blocks?:
+    | {
+        key: string;
+        label?: string | null;
+        title?: string | null;
+        kicker?: string | null;
+        meta?: string | null;
+        href?: string | null;
+        body?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Work slots. BioBuild is the only filled case. AT&T and T-Mobile stay pending clearance until real screenshots exist. Do not invent metrics or fake UI.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects".
+ */
+export interface Project {
+  id: number;
+  index: string;
+  title: string;
+  client: string;
+  status: 'filled' | 'tbd' | 'reserved';
+  kind: 'case' | 'corporate' | 'reserved';
+  /**
+   * URL segment under /work. Shared by sibling slots (both AT&T cards use att).
+   */
+  caseSlug?: string | null;
+  summary: string;
+  tags?:
+    | {
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  href: string;
+  /**
+   * CDN or site URL. Leave empty for placeholders — do not paste stock photos.
+   */
+  imageUrl?: string | null;
+  imageAlt?: string | null;
+  liveUrl?: string | null;
+  liveLabel?: string | null;
+  showOnRail?: boolean | null;
+  railOrder?: number | null;
+  role?: string | null;
+  year?: string | null;
+  dates?: string | null;
+  location?: string | null;
+  stack?:
+    | {
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  accent?: ('moss' | 'crimson' | 'gold') | null;
+  log?:
+    | {
+        stamp: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  sections?:
+    | {
+        anchor: string;
+        eyebrow?: string | null;
+        title: string;
+        /**
+         * Separate paragraphs with a blank line.
+         */
+        body?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  highlights?:
+    | {
+        title: string;
+        body: string;
+        id?: string | null;
+      }[]
+    | null;
+  facts?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  gallery?:
+    | {
+        url: string;
+        alt: string;
+        caption?: string | null;
+        placement: 'hero' | 'problem' | 'approach';
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Empty screenshot slots for NDA placeholders. No fake product UI.
+   */
+  plates?:
+    | {
+        label: string;
+        aspect: 'wide' | 'landscape' | 'portrait';
+        id?: string | null;
+      }[]
+    | null;
+  nextHref?: string | null;
+  nextIndex?: string | null;
+  nextTitle?: string | null;
+  ndaNote?: string | null;
+  closing?: {
+    eyebrow?: string | null;
+    title?: string | null;
+    accent?: string | null;
+    body?: string | null;
+    primaryLabel?: string | null;
+    primaryHref?: string | null;
+    secondaryLabel?: string | null;
+    secondaryHref?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Messages saved from the public contact form. Nothing is emailed automatically — reply from the address in Site settings. Extra $0, no mail provider.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inquiries".
+ */
+export interface Inquiry {
+  id: number;
+  name: string;
+  email: string;
+  projectType?: string | null;
+  message: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -193,6 +369,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'projects';
+        value: number | Project;
+      } | null)
+    | ({
+        relationTo: 'inquiries';
+        value: number | Inquiry;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -279,6 +467,144 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  eyebrow?: T;
+  headline?: T;
+  headlineAccent?: T;
+  lede?: T;
+  blocks?:
+    | T
+    | {
+        key?: T;
+        label?: T;
+        title?: T;
+        kicker?: T;
+        meta?: T;
+        href?: T;
+        body?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects_select".
+ */
+export interface ProjectsSelect<T extends boolean = true> {
+  index?: T;
+  title?: T;
+  client?: T;
+  status?: T;
+  kind?: T;
+  caseSlug?: T;
+  summary?: T;
+  tags?:
+    | T
+    | {
+        label?: T;
+        id?: T;
+      };
+  href?: T;
+  imageUrl?: T;
+  imageAlt?: T;
+  liveUrl?: T;
+  liveLabel?: T;
+  showOnRail?: T;
+  railOrder?: T;
+  role?: T;
+  year?: T;
+  dates?: T;
+  location?: T;
+  stack?:
+    | T
+    | {
+        label?: T;
+        id?: T;
+      };
+  accent?: T;
+  log?:
+    | T
+    | {
+        stamp?: T;
+        label?: T;
+        id?: T;
+      };
+  sections?:
+    | T
+    | {
+        anchor?: T;
+        eyebrow?: T;
+        title?: T;
+        body?: T;
+        id?: T;
+      };
+  highlights?:
+    | T
+    | {
+        title?: T;
+        body?: T;
+        id?: T;
+      };
+  facts?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  gallery?:
+    | T
+    | {
+        url?: T;
+        alt?: T;
+        caption?: T;
+        placement?: T;
+        id?: T;
+      };
+  plates?:
+    | T
+    | {
+        label?: T;
+        aspect?: T;
+        id?: T;
+      };
+  nextHref?: T;
+  nextIndex?: T;
+  nextTitle?: T;
+  ndaNote?: T;
+  closing?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        accent?: T;
+        body?: T;
+        primaryLabel?: T;
+        primaryHref?: T;
+        secondaryLabel?: T;
+        secondaryHref?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inquiries_select".
+ */
+export interface InquiriesSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  projectType?: T;
+  message?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -316,6 +642,81 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * Name, email, LinkedIn, navigation, and footer. Do not add a personal phone number.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  name: string;
+  roleLine?: string | null;
+  email: string;
+  linkedinUrl?: string | null;
+  linkedinLabel?: string | null;
+  location?: string | null;
+  /**
+   * Shown in the header. Clear this when the site should no longer say private preview.
+   */
+  previewBadge?: string | null;
+  primaryCtaLabel?: string | null;
+  primaryCtaHref?: string | null;
+  footerBlurb?: string | null;
+  copyright?: string | null;
+  footerNote?: string | null;
+  navLinks?:
+    | {
+        label: string;
+        href: string;
+        id?: string | null;
+      }[]
+    | null;
+  footerLinks?:
+    | {
+        label: string;
+        href: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  name?: T;
+  roleLine?: T;
+  email?: T;
+  linkedinUrl?: T;
+  linkedinLabel?: T;
+  location?: T;
+  previewBadge?: T;
+  primaryCtaLabel?: T;
+  primaryCtaHref?: T;
+  footerBlurb?: T;
+  copyright?: T;
+  footerNote?: T;
+  navLinks?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        id?: T;
+      };
+  footerLinks?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

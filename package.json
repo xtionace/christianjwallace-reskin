@@ -1,7 +1,7 @@
 {
-  "name": "reskin-base",
+  "name": "christian-wallace",
   "version": "1.0.0",
-  "description": "Reskin Base — reusable Payload CMS (blank) + Next.js + shadcn/ui starter. Fork per client, then apply website reskin skill.",
+  "description": "Christian Wallace portfolio — template E, Kinetic Craft Chromatic — Payload, Next.js, and shadcn/ui.",
   "license": "MIT",
   "type": "module",
   "scripts": {

@@ -7,10 +7,20 @@ const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
+  experimental: {
+    globalNotFound: true,
+  },
   images: {
     localPatterns: [
       {
         pathname: '/api/media/file/**',
+      },
+    ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.magicpatterns.com',
+        pathname: '/patterns/generated-images/**',
       },
     ],
   },
