@@ -206,6 +206,8 @@ const att: ProjectContent = {
   caseSlug: 'att',
   summary:
     'Two AI toolkits for AT&T Business. On-brand prototypes with validation, and a gated workflow that moved shipping from 5-10 PRs a month to 40.',
+  cardSummary:
+    'Went from developer to AI systems engineer at AT&T Business, building gated AI workflows that moved shipping from 5-10 PRs a month to 40.',
   tags: ['Design system', 'AI toolkits'],
   href: '/work/att',
   imageUrl: '',
@@ -293,7 +295,9 @@ const tmobile: ProjectContent = {
   kind: 'case',
   caseSlug: 't-mobile',
   summary:
-    'Consumer design system for T-Mobile and Metro by T-Mobile. Shared components, a Metro theme, and color tokens for iOS, Android, and web.',
+    'Built the component library for the T-Mobile consumer design system. That library was the bulk of the work, with a Metro theme and color tokens for iOS, Android, and web.',
+  cardSummary:
+    "Built the component library for T-Mobile's consumer design system, plus a Metro theme and color tokens for iOS, Android, and web.",
   tags: ['Design system', 'Color tokens'],
   href: '/work/t-mobile',
   imageUrl: '',
@@ -311,7 +315,7 @@ const tmobile: ProjectContent = {
   stack: ['HTML/CSS', 'Web Components', 'React', 'Angular', 'Node'],
   accent: 'gold',
   log: [
-    { stamp: 'LOG 01', label: 'Core components' },
+    { stamp: 'LOG 01', label: 'Component library' },
     { stamp: 'LOG 02', label: 'Headless components' },
     { stamp: 'LOG 03', label: 'Metro theme' },
     { stamp: 'LOG 04', label: 'Color tokens' },
@@ -320,26 +324,26 @@ const tmobile: ProjectContent = {
     {
       anchor: 'role',
       eyebrow: '01 — Role',
-      title: 'Consumer design system team.',
-      body: 'Front End Developer IV on the consumer design system team, 2020 to Sep 2023, in Bellevue, WA. Most elements on the T-Mobile site came from components the team built. Christian had a part in most of them.',
+      title: 'The component library was the bulk of the work.',
+      body: 'Front End Developer IV on the consumer design system team, 2020 to Sep 2023, in Bellevue, WA. Building the component library, as part of the full design system, was the bulk of his work. Most elements on the T-Mobile site came from components the team built. Christian had a part in most of them.',
     },
     {
       anchor: 'approach',
       eyebrow: '02 — Approach',
-      title: 'One component set, two brands, three platforms.',
-      body: 'Built core components, and helped the AEM team make headless core components.\n\nCreated a Metro theme so Metro by T-Mobile could reuse the same component set and switch brands.\n\nBuilt a cross-platform color token tool that outputs tokens for iOS, Android, and web.',
+      title: 'Library first, then a theme and tokens.',
+      body: 'Built the component library for the consumer design system. Core components were the bulk of the work.\n\nHelped the AEM team make headless core components.\n\nCreated a Metro theme so Metro by T-Mobile could reuse the same component set and switch brands.\n\nBuilt a cross-platform color token tool that outputs tokens for iOS, Android, and web.',
     },
     {
       anchor: 'result',
       eyebrow: '03 — Result',
-      title: 'The same components, on T-Mobile and Metro.',
-      body: 'The T-Mobile site drew most of its elements from the team’s components. Metro by T-Mobile reused that set through a theme. Color tokens shipped for iOS, Android, and web.',
+      title: 'The library, on T-Mobile and Metro.',
+      body: 'Building the component library was the bulk of the work. The T-Mobile site drew most of its elements from the team’s components. Metro by T-Mobile reused that set through a theme. Color tokens shipped for iOS, Android, and web.',
     },
   ],
   highlights: [
     {
-      title: 'Core components',
-      body: 'Core components for the consumer design system, plus help for the AEM team on headless core components.',
+      title: 'Component library',
+      body: 'Core components for the consumer design system. Building that library was the bulk of the work, plus help for the AEM team on headless core components.',
     },
     {
       title: 'Metro theme',
@@ -351,9 +355,10 @@ const tmobile: ProjectContent = {
     },
   ],
   facts: [
+    'Building the component library was the bulk of the work',
     'Consumer design system team, 2020 — Sep 2023',
     'Most elements on the T-Mobile site came from the team’s components',
-    'Built core components',
+    'Built core components for the library',
     'Helped the AEM team make headless core components',
     'Metro theme reuses the same component set',
     'Color tokens output for iOS, Android, and web',
@@ -702,7 +707,7 @@ export const defaultPortfolio: Portfolio = {
       years: '2015–2017',
       location: 'Bothell, WA',
       summary:
-        'Front end of the OptumCare Provider Portal (HTML5, SASS, Angular) across local and remote agile teams.',
+        'Front end of the OptumCare Provider Portal, and Receipt Vault, a tool for Optum Bank customers to record paper receipts (HTML5, SASS, Angular).',
       tags: ['HTML5', 'Angular'],
     }),
     roleCard({
@@ -713,7 +718,7 @@ export const defaultPortfolio: Portfolio = {
       years: '2012–2015',
       location: 'Bothell, WA',
       summary:
-        'HTML5 interactive learning that replaced Flash, plus real-time authoring and data-driven dashboards.',
+        'Built interactive HTML5 learning games that replaced Flash, plus real-time authoring tools and data-driven dashboards.',
       tags: ['HTML5'],
     }),
     roleCard({
@@ -723,7 +728,8 @@ export const defaultPortfolio: Portfolio = {
       role: 'Senior Front-End Web Designer/Developer',
       years: '2011–2012',
       location: 'Seattle, WA',
-      summary: 'Hand-coded HTML/CSS for Kindle Fire under tight deadlines.',
+      summary:
+        'Converted print books and comic books into digital editions for Kindle Fire, hand-coding HTML and CSS under tight deadlines.',
       tags: ['Kindle Fire', 'HTML/CSS'],
     }),
     roleCard({
@@ -734,7 +740,7 @@ export const defaultPortfolio: Portfolio = {
       years: '2003–2011',
       location: 'Seattle, WA',
       summary:
-        'Client web and CMS work for Northwest builders. A Seattle Housing Authority campaign sold 19 homes opening weekend.',
+        'Web Director at a marketing agency for master-planned real estate communities. Client sites and CMS work, including a Seattle Housing Authority campaign that sold 19 homes opening weekend.',
       tags: ['CMS'],
     }),
   ],

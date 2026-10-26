@@ -85,7 +85,11 @@ export function WorkRail({ items, label }: { items: ProjectContent[]; label?: st
             )}
             aria-label={`Slide ${index + 1} of ${items.length}`}
           >
-            <WorkCard item={item} layout="rail" />
+            <WorkCard
+              item={item}
+              layout="rail"
+              cardBlurb={item.caseSlug === 't-mobile' ? item.cardSummary : undefined}
+            />
           </div>
         ))}
       </div>

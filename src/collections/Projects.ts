@@ -60,6 +60,14 @@ export const Projects: CollectionConfig = {
             },
             { name: 'summary', type: 'textarea', required: true },
             {
+              name: 'cardSummary',
+              type: 'textarea',
+              admin: {
+                description:
+                  'Work page card only. Leave empty to reuse the summary. The case study page keeps Summary.',
+              },
+            },
+            {
               name: 'tags',
               type: 'array',
               fields: [{ name: 'label', type: 'text', required: true }],

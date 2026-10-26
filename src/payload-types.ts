@@ -228,6 +228,10 @@ export interface Project {
    */
   caseSlug?: string | null;
   summary: string;
+  /**
+   * Work page card only. Leave empty to reuse the summary. The case study page keeps Summary.
+   */
+  cardSummary?: string | null;
   tags?:
     | {
         label: string;
@@ -511,6 +515,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   kind?: T;
   caseSlug?: T;
   summary?: T;
+  cardSummary?: T;
   tags?:
     | T
     | {

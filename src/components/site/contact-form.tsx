@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect, useState } from 'react'
+import { useActionState, useState } from 'react'
 import { AlertCircle, Check } from 'lucide-react'
 
 import { submitInquiry, type InquiryState } from '@/app/(frontend)/contact/actions'
@@ -46,10 +46,6 @@ export function ContactForm({
   const [dismissed, setDismissed] = useState(false)
   const sent = state.status === 'sent' && !dismissed && !pending
 
-  useEffect(() => {
-    if (pending) setDismissed(false)
-  }, [pending])
-
   return (
     <section aria-labelledby="form-title" className="luminous rounded-3xl bg-card p-7 md:p-9">
       <h2 id="form-title" className="font-display text-2xl font-semibold text-foreground">
@@ -76,7 +72,7 @@ export function ContactForm({
           </Button>
         </Alert>
       ) : (
-        <form action={formAction} noValidate className="mt-8">
+        <form action={formAction} noValidate className="mt-8" onSubmit={() => setDismissed(false)}>
           <FieldGroup>
             {state.formError ? (
               <Alert variant="destructive">

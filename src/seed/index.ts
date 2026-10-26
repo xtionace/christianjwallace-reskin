@@ -9,6 +9,8 @@ import type {
   WorkStatus,
 } from '@/content/types'
 
+const syncedSlugs = ['att', 't-mobile', 'optumcare', 'mcgraw-hill', 'kindle', 'fusion'] as const
+
 function labels(values: string[]) {
   return values.map((label) => ({ label }))
 }
@@ -42,6 +44,7 @@ function mapProject(project: ProjectContent) {
     kind: project.kind,
     caseSlug: project.caseSlug,
     summary: project.summary,
+    cardSummary: project.cardSummary,
     tags: labels(project.tags),
     href: project.href,
     imageUrl: project.imageUrl,
@@ -135,12 +138,63 @@ export async function ensureHomepageCopy(payload: Payload) {
   const projects = await payload.find({ collection: 'projects', limit: 50, depth: 0 })
   for (const project of projects.docs) {
     const chrome = chromeFor(project.status)
-    const data: { statusLabel?: string; mediaBadge?: string } = {}
+    const seeded = defaultPortfolio.projects.find((item) => item.caseSlug === project.caseSlug)
+    const data: { statusLabel?: string; mediaBadge?: string; cardSummary?: string } = {}
     if (project.statusLabel == null) data.statusLabel = chrome.statusLabel
     if (project.mediaBadge == null) data.mediaBadge = chrome.mediaBadge
-    if (data.statusLabel !== undefined || data.mediaBadge !== undefined) {
+    if (!project.cardSummary && seeded?.cardSummary) data.cardSummary = seeded.cardSummary
+    if (
+      data.statusLabel !== undefined ||
+      data.mediaBadge !== undefined ||
+      data.cardSummary !== undefined
+    ) {
       await payload.update({ collection: 'projects', id: project.id, data })
     }
+  }
+}
+
+/** Keep code-owned card and case-study copy in step with an existing database. */
+async function syncSeededCopy(payload: Payload) {
+  for (const slug of syncedSlugs) {
+    const seeded = defaultPortfolio.projects.find((item) => item.caseSlug === slug)
+    if (!seeded) continue
+    const found = await payload.find({
+      collection: 'projects',
+      where: { caseSlug: { equals: slug } },
+      limit: 1,
+      depth: 0,
+    })
+    const project = found.docs[0]
+    if (!project) continue
+
+    const data: {
+      summary?: string
+      cardSummary?: string
+      log?: ProjectContent['log']
+      sections?: ProjectContent['sections']
+      highlights?: ProjectContent['highlights']
+      facts?: { text: string }[]
+    } = {}
+    if (project.summary !== seeded.summary) data.summary = seeded.summary
+    const currentCard = typeof project.cardSummary === 'string' ? project.cardSummary : ''
+    const nextCard = seeded.cardSummary ?? ''
+    if (currentCard !== nextCard) data.cardSummary = nextCard
+
+    if (slug === 't-mobile') {
+      const first = Array.isArray(project.sections) ? project.sections[0] : undefined
+      const title =
+        first && typeof first === 'object' && 'title' in first ? String(first.title ?? '') : ''
+      if (title !== (seeded.sections[0]?.title ?? '')) {
+        data.log = seeded.log
+        data.sections = seeded.sections
+        data.highlights = seeded.highlights
+        data.facts = seeded.facts.map((text) => ({ text }))
+      }
+    }
+
+    if (Object.keys(data).length === 0) continue
+    await payload.update({ collection: 'projects', id: project.id, data })
+    payload.logger.info(`Synced ${slug} copy from the portfolio seed`)
   }
 }
 
@@ -171,4 +225,5 @@ export async function seedPortfolio(payload: Payload) {
   }
 
   await ensureHomepageCopy(payload)
+  await syncSeededCopy(payload)
 }

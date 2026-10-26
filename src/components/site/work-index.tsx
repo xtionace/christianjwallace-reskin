@@ -76,6 +76,8 @@ export function WorkIndex({
             <WorkCard
               item={item}
               layout={item.status === 'filled' && filter === 'all' ? 'rail' : 'grid'}
+              playLoop={item.caseSlug === 'biobuild'}
+              cardBlurb={item.cardSummary}
             />
           </Reveal>
         ))}

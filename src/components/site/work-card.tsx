@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowUpRight, Lock, Plus } from 'lucide-react'
 
+import { CardLoop } from '@/components/site/card-loop'
 import { CardVisual, hasCardVisual } from '@/components/site/card-visuals'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
@@ -20,32 +21,46 @@ const shell: Record<WorkStatus, string> = {
 export function WorkCard({
   item,
   layout = 'grid',
+  playLoop = false,
+  cardBlurb,
 }: {
   item: ProjectContent
   layout?: 'rail' | 'grid'
+  playLoop?: boolean
+  cardBlurb?: string
 }) {
   const mediaAspect = layout === 'rail' ? 'aspect-[16/10]' : 'aspect-[4/3]'
   const linked = Boolean(item.href) && item.kind !== 'card' && item.kind !== 'reserved'
   const showVisual = hasCardVisual(item.caseSlug)
+  const photo = item.status === 'filled' && Boolean(item.imageUrl)
+  const lockAspect = photo || !showVisual
   const goldCase = item.status === 'filled' && item.accent === 'gold'
   const showRole = item.status === 'summary' || item.status === 'card' || goldCase
 
   const media = (
-    <div className={cn('relative overflow-hidden', mediaAspect)}>
+    <div className={cn('relative', lockAspect && 'overflow-hidden', lockAspect && mediaAspect)}>
       {item.status === 'filled' && item.imageUrl ? (
         <>
-          <Image
-            src={item.imageUrl}
-            alt={item.imageAlt || item.title}
-            fill
-            sizes={
-              layout === 'rail'
-                ? '(min-width: 1024px) 46vw, 86vw'
-                : '(min-width: 1024px) 33vw, 100vw'
-            }
-            className="object-cover transition-transform duration-700 group-hover:scale-[1.04] motion-reduce:transition-none"
-            priority={layout === 'rail'}
-          />
+          {playLoop ? (
+            <CardLoop
+              src="/media/biobuild-card-loop.mp4"
+              poster="/media/biobuild-card-poster.jpg"
+              alt="BioBuild Systems homepage."
+            />
+          ) : (
+            <Image
+              src={item.imageUrl}
+              alt={item.imageAlt || item.title}
+              fill
+              sizes={
+                layout === 'rail'
+                  ? '(min-width: 1024px) 46vw, 86vw'
+                  : '(min-width: 1024px) 33vw, 100vw'
+              }
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.04] motion-reduce:transition-none"
+              priority={layout === 'rail'}
+            />
+          )}
           <div
             className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,var(--card))]"
             aria-hidden="true"
@@ -61,11 +76,7 @@ export function WorkCard({
           ) : null}
         </>
       ) : null}
-      {showVisual ? (
-        <div className="size-full">
-          <CardVisual slug={item.caseSlug} />
-        </div>
-      ) : null}
+      {showVisual ? <CardVisual slug={item.caseSlug} /> : null}
       {item.status === 'tbd' && !showVisual ? (
         <div className="relative size-full bg-secondary">
           <div
@@ -186,7 +197,9 @@ export function WorkCard({
         )}
       </CardHeader>
       <CardContent className="relative z-20 px-5 md:px-6">
-        <p className="text-sm leading-relaxed text-muted-foreground/80">{item.summary}</p>
+        <p className="text-sm leading-relaxed text-muted-foreground/80">
+          {cardBlurb || item.summary}
+        </p>
         {item.status === 'summary' ? (
           <p className="mt-3 text-xs text-primary">Full case study coming later.</p>
         ) : null}

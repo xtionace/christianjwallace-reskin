@@ -130,6 +130,7 @@ function mapProject(value: unknown): ProjectContent | undefined {
     kind: asKind(record.kind),
     caseSlug: str(record.caseSlug),
     summary: str(record.summary),
+    cardSummary: str(record.cardSummary) || undefined,
     tags: labels(record.tags),
     href: str(record.href, '/contact'),
     imageUrl: str(record.imageUrl),

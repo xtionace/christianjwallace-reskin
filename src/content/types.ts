@@ -72,6 +72,8 @@ export type ProjectContent = {
   kind: ProjectKind
   caseSlug: string
   summary: string
+  /** Work-page card blurb. The case study page keeps `summary`. */
+  cardSummary?: string
   tags: string[]
   href: string
   imageUrl: string
