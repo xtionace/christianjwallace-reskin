@@ -16,7 +16,7 @@ services:
     env_file:
       - .env
 
-  # Ensure your DATABASE_URL uses 'mongo' as the hostname ie. mongodb://mongo/my-db-name
+  # DATABASE_URI for this service is mongodb://mongo:27017/christianjwallace
   mongo:
     image: mongo:latest
     ports:

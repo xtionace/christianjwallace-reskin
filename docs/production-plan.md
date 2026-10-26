@@ -2,6 +2,8 @@
 
 Checked 26 October 2026. This is a plan and config only. No Vercel project settings, domains, databases, Blob stores, billing, or DreamHost DNS records were changed from this repo.
 
+On 26 October 2026 Christian moved the database plan off Turso. Turso was never created, and there is no production data to copy. The site seeds MongoDB from `src/content/portfolio.ts` and runs on a DreamHost VPS. The commands, PM2 file, and Nginx example are in `docs/self-hosting.md`. The Vercel and Turso steps below are the earlier notes. Do not create a Turso database from them.
+
 Christian decided on 25 October 2026, 11:15 PM PT, to host the portfolio on Vercel for now:
 
 - Team: `matrix-studio1`
@@ -14,11 +16,11 @@ The Hobby plan is for personal, non-commercial use ([Vercel Hobby](https://verce
 
 ## Recommendation
 
-Use **Turso (libSQL)** with the existing `@payloadcms/db-sqlite` adapter.
+Superseded. Use MongoDB and the DreamHost VPS in `docs/self-hosting.md`. The notes that follow described **Turso (libSQL)** with `@payloadcms/db-sqlite`. That adapter is no longer installed, `src/migrations` is gone, and `DATABASE_URI` is a MongoDB connection string.
 
-The SQL in `src/migrations` is SQLite (`strftime`, backtick identifiers, integer primary keys). libSQL runs that SQL. Postgres does not. Local development keeps `file:./reskin-base.db`. A remote database is a `libsql://` URL plus a token, which is the setup in [Payload’s SQLite docs](https://payloadcms.com/docs/database/sqlite).
+The abandoned plan treated the SQL in `src/migrations` as SQLite (`strftime`, backtick identifiers, integer primary keys), which libSQL can run and Postgres cannot. Local development kept `file:./reskin-base.db`. A remote database was a `libsql://` URL plus a token, the setup in [Payload’s SQLite docs](https://payloadcms.com/docs/database/sqlite).
 
-Neon is the better Marketplace Postgres, and it is the right later move if the schema is regenerated for `@payloadcms/db-postgres`. It is not wired up. A `postgres://` or `postgresql://` string in `DATABASE_URL` or `DATABASE_URI` is ignored so it cannot be passed to the SQLite client.
+Neon was the later Postgres option if the schema were regenerated for `@payloadcms/db-postgres`. It was not wired up. Under that SQLite adapter, a `postgres://` or `postgresql://` string in `DATABASE_URL` or `DATABASE_URI` was ignored so it could not be passed to the SQLite client. That guard is gone with the adapter.
 
 Keep uploads out of object storage for launch. The BioBuild plates and the card video already live in `public/` and ship with the deployment. Add Vercel Blob only if the Payload Media collection needs to store new files.
 
@@ -54,7 +56,7 @@ The plugin is not installed. Local Media uploads still use Payload’s default d
 
 ## Environment variables
 
-Names only. Do not commit values. Set Production and Preview separately on `christianjwallace-portfolio`. `VERCEL_ENV` is set by Vercel. Do not add it yourself.
+The names in this table were for the Vercel and Turso plan. The running app reads `DATABASE_URI`, `PAYLOAD_SECRET`, `NEXT_PUBLIC_SERVER_URL`, `PORT`, and `PAYLOAD_MEDIA_DIR` instead. See `docs/self-hosting.md`. Names only. Do not commit values. `VERCEL_ENV` is set by Vercel. Do not add it yourself.
 
 | Name | Where | Purpose |
 | --- | --- | --- |
@@ -63,7 +65,7 @@ Names only. Do not commit values. Set Production and Preview separately on `chri
 | `DATABASE_AUTH_TOKEN` | Production, only with a remote URL | Token for that database. Omit it for a `file:` URL. |
 | `TURSO_DATABASE_URL` | Optional alias | Read when `DATABASE_URL` is empty. This is the name the Turso Marketplace integration writes. |
 | `TURSO_AUTH_TOKEN` | Optional alias | Read when `DATABASE_AUTH_TOKEN` is empty. Marketplace name for the token. |
-| `DATABASE_URI` | Not used for Postgres | Accepted only when the value is a `file:` or `libsql:` URL. A `postgres://` or `postgresql://` value is ignored. That is the name Neon and some Payload examples use. |
+| `DATABASE_URI` | Was not the Mongo name | Under the SQLite adapter this was accepted only as a `file:` or `libsql:` URL. It is now the required MongoDB connection string. See `docs/self-hosting.md`. |
 | `NEXT_PUBLIC_SERVER_URL` | Production | Canonical origin, `https://christianjwallace.com`, with no trailing slash. Leave unset locally and on Preview so those deployments do not advertise the production origin. |
 | `VERCEL_ENV` | Set by Vercel | Indexing switch. `preview` is noindex (robots meta, `/robots.txt`, empty sitemap, preview badge). `production` is indexable. |
 | `BLOB_READ_WRITE_TOKEN` | Only if Blob is added later | Vercel Blob read/write token. Not required now. |
@@ -75,7 +77,7 @@ Preview can leave `DATABASE_URL` unset. The app then uses `file:/tmp/portfolio.d
 
 ## Launch steps
 
-Do these in order, on the Hobby plan, after this branch is merged and the Vercel project is building from it. None of these steps were run for this document.
+Do not run these Turso steps. The VPS steps are in `docs/self-hosting.md`. The list below is the earlier Hobby-plan sequence. None of these steps were run.
 
 1. Create one Turso database on the free plan (Turso’s dashboard or the Marketplace integration on team `matrix-studio1`). Name it for this project. If the screen asks for a paid plan or a card, stop.
 2. In the Vercel project `christianjwallace-portfolio`, set Production `PAYLOAD_SECRET`, `DATABASE_URL` (the `libsql://` URL), and `DATABASE_AUTH_TOKEN`. If the integration already created `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`, those names work and you can skip duplicating them.
@@ -94,7 +96,7 @@ Do these in order, on the Hobby plan, after this branch is merged and the Vercel
 
 ## DNS at DreamHost
 
-Leave the nameservers at DreamHost. Add records in the existing zone. Do not edit MX, SPF, DKIM, DMARC, or any other mail TXT records.
+These Vercel record examples are not applied by this branch. Leave the nameservers at DreamHost. Do not edit MX, SPF, DKIM, DMARC, or any other mail TXT records. The public address is `contact@christianjwallace.com`.
 
 Vercel’s current docs (26 October 2026):
 
