@@ -209,7 +209,7 @@ export function CaseStudy({
                       />
                     </div>
                     {problem.caption ? (
-                      <figcaption className="border-t border-border bg-card px-5 py-3 font-mono text-[11px] tracking-[0.18em] text-muted-foreground/70 uppercase">
+                      <figcaption className="border-t border-border bg-card px-5 py-copy font-mono text-[11px] tracking-[0.18em] text-muted-foreground/70 uppercase">
                         {problem.caption}
                       </figcaption>
                     ) : null}
@@ -299,7 +299,12 @@ export function CaseStudy({
                     </ul>
                     {project.liveUrl ? (
                       <div className="mt-8">
-                        <CtaLink href={project.liveUrl} external variant="ghost">
+                        <CtaLink
+                          href={project.liveUrl}
+                          external
+                          variant="ghost"
+                          className="h-auto max-w-full min-h-12 py-3 whitespace-normal"
+                        >
                           Visit {project.liveLabel || 'the live site'}
                         </CtaLink>
                       </div>

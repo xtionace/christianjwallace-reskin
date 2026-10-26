@@ -1,18 +1,39 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-import { WorkCard } from '@/components/site/work-card'
+import { WorkCard, workCardLayout } from '@/components/site/work-card'
 import { Button } from '@/components/ui/button'
 import type { ProjectContent } from '@/content/types'
 import { cn } from '@/lib/utils'
 
-const railPadding = 'max(1.5rem, calc((100vw - 1320px) / 2 + 1.5rem))'
+const railPadding =
+  'max(var(--space-section), calc((100vw - 1320px) / 2 + var(--space-section)))'
 
 export function WorkRail({ items, label }: { items: ProjectContent[]; label?: string }) {
   const trackRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(0)
+  const [mediaMin, setMediaMin] = useState(0)
+
+  // One shared media height: the tallest diagram, or the BioBuild frame at this width.
+  useLayoutEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    const measure = () => {
+      const contents = track.querySelectorAll<HTMLElement>('[data-rail-media-content]')
+      let max = 0
+      contents.forEach((content) => {
+        if (content.offsetHeight > max) max = content.offsetHeight
+      })
+      setMediaMin((prev) => (prev === max ? prev : max))
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(track)
+    Array.from(track.children).forEach((child) => observer.observe(child))
+    return () => observer.disconnect()
+  }, [items])
 
   const updateActive = useCallback(() => {
     const track = trackRef.current
@@ -59,8 +80,14 @@ export function WorkRail({ items, label }: { items: ProjectContent[]; label?: st
     <div>
       <div
         ref={trackRef}
-        className="rail flex gap-5 overflow-x-auto pt-2 pb-6"
-        style={{ paddingInline: railPadding, scrollPaddingInline: railPadding }}
+        className="rail flex items-stretch gap-5 overflow-x-auto pt-2 pb-6"
+        style={
+          {
+            paddingInline: railPadding,
+            scrollPaddingInline: railPadding,
+            '--rail-media': mediaMin ? `${mediaMin}px` : 'auto',
+          } as CSSProperties
+        }
         role="region"
         aria-roledescription="carousel"
         aria-label={label}
@@ -80,16 +107,12 @@ export function WorkRail({ items, label }: { items: ProjectContent[]; label?: st
           <div
             key={item.index}
             className={cn(
-              'flex shrink-0 self-stretch',
+              'flex shrink-0 flex-col self-stretch',
               index === 0 ? 'w-[86%] sm:w-[64%] lg:w-[46%]' : 'w-[80%] sm:w-[48%] lg:w-[32%]',
             )}
             aria-label={`Slide ${index + 1} of ${items.length}`}
           >
-            <WorkCard
-              item={item}
-              layout="rail"
-              cardBlurb={item.caseSlug === 't-mobile' ? item.cardSummary : undefined}
-            />
+            <WorkCard item={item} layout={workCardLayout(item)} equalHeight />
           </div>
         ))}
       </div>
