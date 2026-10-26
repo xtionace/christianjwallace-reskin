@@ -18,6 +18,18 @@ const shell: Record<WorkStatus, string> = {
   reserved: 'border border-dashed border-white/12 bg-background/60',
 }
 
+/** Softens the carousel video into the card color. 32px at the top and bottom of the frame. */
+const videoEdgeFade = {
+  WebkitMaskImage:
+    'linear-gradient(to bottom, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%)',
+  maskImage:
+    'linear-gradient(to bottom, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%)',
+  WebkitMaskRepeat: 'no-repeat',
+  maskRepeat: 'no-repeat',
+  WebkitMaskSize: '100% 100%',
+  maskSize: '100% 100%',
+} as const
+
 /** Filled case studies use the wide card. Everything else uses the grid card. */
 export function workCardLayout(item: ProjectContent): 'rail' | 'grid' {
   return item.status === 'filled' ? 'rail' : 'grid'
@@ -68,15 +80,15 @@ export function WorkCard({
         <>
           {playLoop ? (
             equalHeight ? (
-              <div data-rail-media-content="" className="relative aspect-[736/488] w-full shrink-0">
+              <div
+                data-rail-media-content=""
+                className="relative aspect-[736/488] w-full shrink-0"
+                style={videoEdgeFade}
+              >
                 <CardLoop
                   src="/media/biobuild-card-loop.mp4"
                   poster="/media/biobuild-card-poster.jpg"
                   alt="BioBuild Systems homepage."
-                />
-                <div
-                  className="absolute inset-0 bg-[linear-gradient(180deg,transparent_82%,var(--card))]"
-                  aria-hidden="true"
                 />
               </div>
             ) : (
