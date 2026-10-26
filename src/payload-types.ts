@@ -211,7 +211,7 @@ export interface Page {
   createdAt: string;
 }
 /**
- * Work slots. BioBuild is the only filled case. AT&T and T-Mobile stay pending clearance until real screenshots exist. Do not invent metrics or fake UI.
+ * Work entries. BioBuild, AT&T, and T-Mobile are filled case studies. Earlier roles are short cards. Do not invent metrics, clients, or screenshots.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "projects".
@@ -221,13 +221,17 @@ export interface Project {
   index: string;
   title: string;
   client: string;
-  status: 'filled' | 'tbd' | 'reserved';
-  kind: 'case' | 'corporate' | 'reserved';
+  status: 'filled' | 'summary' | 'card' | 'tbd' | 'reserved';
+  kind: 'case' | 'corporate' | 'card' | 'reserved';
   /**
-   * URL segment under /work. Shared by sibling slots (both AT&T cards use att).
+   * URL segment under /work for case studies and résumé summaries. Role cards are not separate pages.
    */
   caseSlug?: string | null;
   summary: string;
+  /**
+   * Work page card only. Leave empty to reuse the summary. The case study page keeps Summary.
+   */
+  cardSummary?: string | null;
   tags?:
     | {
         label: string;
@@ -247,7 +251,7 @@ export interface Project {
    */
   statusLabel?: string | null;
   /**
-   * Badge over the card image. Example: Live, or Screenshots pending clearance. Leave empty on reserved slots.
+   * Badge over the card image. Example: Live. Leave empty when the card uses a coded visual instead of a photo.
    */
   mediaBadge?: string | null;
   showOnRail?: boolean | null;
@@ -511,6 +515,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   kind?: T;
   caseSlug?: T;
   summary?: T;
+  cardSummary?: T;
   tags?:
     | T
     | {

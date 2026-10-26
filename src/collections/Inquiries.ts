@@ -21,6 +21,14 @@ export const Inquiries: CollectionConfig = {
     { name: 'name', type: 'text', required: true },
     { name: 'email', type: 'email', required: true },
     { name: 'projectType', type: 'text' },
-    { name: 'message', type: 'textarea', required: true },
+    {
+      name: 'message',
+      type: 'textarea',
+      required: true,
+      validate: (value) => {
+        if (typeof value !== 'string' || value.trim() === '') return 'Please add a message.'
+        return true
+      },
+    },
   ],
 }

@@ -5,6 +5,7 @@ import { Bricolage_Grotesque, Geist, Geist_Mono } from 'next/font/google'
 import { SiteFooter } from '@/components/site/site-footer'
 import { SiteHeader } from '@/components/site/site-header'
 import { getPortfolio } from '@/lib/get-portfolio'
+import { isPreviewDeployment } from '@/lib/preview'
 
 import '../globals.css'
 
@@ -25,23 +26,47 @@ const display = Bricolage_Grotesque({
 
 export const dynamic = 'force-dynamic'
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://christianjwallace.com'),
-  title: {
-    default: 'Christian Wallace — Web design & frontend craft',
-    template: '%s · Christian Wallace',
-  },
-  description:
-    'Christian Wallace designs and builds websites with enterprise discipline and craftsperson’s care. BioBuild Systems is the filled case; carrier work stays pending clearance.',
-  robots: { index: false, follow: false },
+const description =
+  'Christian Wallace makes complex products feel simple, and he builds the systems that keep them that way.'
+
+const siteTitle = {
+  default: 'Christian Wallace, principal software engineer',
+  template: '%s · Christian Wallace',
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const preview = isPreviewDeployment()
+  return {
+    metadataBase: new URL('https://christianjwallace.com'),
+    title: siteTitle,
+    description,
+    robots: preview ? { index: false, follow: false } : { index: true, follow: true },
+    openGraph: {
+      title: siteTitle,
+      description,
+      siteName: 'Christian Wallace',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: siteTitle,
+      description,
+    },
+  }
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
   const { children } = props
   const portfolio = await getPortfolio()
+  const settings = isPreviewDeployment()
+    ? portfolio.settings
+    : { ...portfolio.settings, previewBadge: '', footerNote: '' }
 
   return (
-    <html lang="en" className={`dark ${geistSans.variable} ${geistMono.variable} ${display.variable}`}>
+    <html
+      lang="en"
+      className={`dark ${geistSans.variable} ${geistMono.variable} ${display.variable}`}
+    >
       <body className="flex min-h-svh flex-col bg-background font-sans text-foreground antialiased">
         <a
           href="#main"
@@ -49,11 +74,11 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
         >
           Skip to content
         </a>
-        <SiteHeader settings={portfolio.settings} />
+        <SiteHeader settings={settings} />
         <main id="main" className="flex-1">
           {children}
         </main>
-        <SiteFooter settings={portfolio.settings} />
+        <SiteFooter settings={settings} />
       </body>
     </html>
   )

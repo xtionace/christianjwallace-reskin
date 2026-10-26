@@ -2,6 +2,7 @@
 
 import { getPayload } from 'payload'
 
+import { defaultPortfolio } from '@/content/portfolio'
 import config from '@/payload.config'
 
 export type InquiryState = {
@@ -19,7 +20,7 @@ export async function submitInquiry(_previous: InquiryState, formData: FormData)
 
   if (!name) errors.name = 'Please add your name.'
   if (!/^\S+@\S+\.\S+$/.test(email)) errors.email = 'Please enter a valid email.'
-  if (message.length < 10) errors.message = 'A sentence or two helps me prepare.'
+  if (!message) errors.message = 'Please add a message.'
   if (Object.keys(errors).length > 0) {
     return { status: 'error', errors, formError: 'Please fix the highlighted fields.' }
   }
@@ -37,7 +38,7 @@ export async function submitInquiry(_previous: InquiryState, formData: FormData)
     return {
       status: 'error',
       errors: {},
-      formError: 'Could not save the message. Email xtionace@gmail.com directly.',
+      formError: `Could not save the message. Email ${defaultPortfolio.settings.email} directly.`,
     }
   }
 }

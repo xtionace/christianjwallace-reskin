@@ -9,7 +9,7 @@ export const Projects: CollectionConfig = {
     defaultColumns: ['index', 'title', 'status', 'kind'],
     group: 'Portfolio',
     description:
-      'Work slots. BioBuild is the only filled case. AT&T and T-Mobile stay pending clearance until real screenshots exist. Do not invent metrics or fake UI.',
+      'Work entries. BioBuild, AT&T, and T-Mobile are filled case studies. Earlier roles are short cards. Do not invent metrics, clients, or screenshots.',
   },
   access: {
     read: () => true,
@@ -33,6 +33,8 @@ export const Projects: CollectionConfig = {
               required: true,
               options: [
                 { label: 'Filled case study', value: 'filled' },
+                { label: 'Résumé summary', value: 'summary' },
+                { label: 'Role card', value: 'card' },
                 { label: 'Pending clearance', value: 'tbd' },
                 { label: 'Reserved', value: 'reserved' },
               ],
@@ -43,7 +45,8 @@ export const Projects: CollectionConfig = {
               required: true,
               options: [
                 { label: 'Filled case', value: 'case' },
-                { label: 'Corporate placeholder', value: 'corporate' },
+                { label: 'Résumé summary', value: 'corporate' },
+                { label: 'Role card', value: 'card' },
                 { label: 'Reserved slot', value: 'reserved' },
               ],
             },
@@ -52,10 +55,18 @@ export const Projects: CollectionConfig = {
               type: 'text',
               admin: {
                 description:
-                  'URL segment under /work. Shared by sibling slots (both AT&T cards use att).',
+                  'URL segment under /work for case studies and résumé summaries. Role cards are not separate pages.',
               },
             },
             { name: 'summary', type: 'textarea', required: true },
+            {
+              name: 'cardSummary',
+              type: 'textarea',
+              admin: {
+                description:
+                  'Work page card only. Leave empty to reuse the summary. The case study page keeps Summary.',
+              },
+            },
             {
               name: 'tags',
               type: 'array',
@@ -86,7 +97,7 @@ export const Projects: CollectionConfig = {
               type: 'text',
               admin: {
                 description:
-                  'Badge over the card image. Example: Live, or Screenshots pending clearance. Leave empty on reserved slots.',
+                  'Badge over the card image. Example: Live. Leave empty when the card uses a coded visual instead of a photo.',
               },
             },
             { name: 'showOnRail', type: 'checkbox', defaultValue: false },

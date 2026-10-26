@@ -51,12 +51,20 @@ function texts(value: unknown) {
 }
 
 function asStatus(value: unknown): WorkStatus {
-  if (value === 'filled' || value === 'tbd' || value === 'reserved') return value
+  if (
+    value === 'filled' ||
+    value === 'summary' ||
+    value === 'card' ||
+    value === 'tbd' ||
+    value === 'reserved'
+  )
+    return value
   return 'reserved'
 }
 
 function asKind(value: unknown): ProjectKind {
-  if (value === 'case' || value === 'corporate' || value === 'reserved') return value
+  if (value === 'case' || value === 'corporate' || value === 'card' || value === 'reserved')
+    return value
   return 'reserved'
 }
 
@@ -122,6 +130,7 @@ function mapProject(value: unknown): ProjectContent | undefined {
     kind: asKind(record.kind),
     caseSlug: str(record.caseSlug),
     summary: str(record.summary),
+    cardSummary: str(record.cardSummary) || undefined,
     tags: labels(record.tags),
     href: str(record.href, '/contact'),
     imageUrl: str(record.imageUrl),
@@ -215,8 +224,8 @@ function mapSettings(value: unknown): SiteSettingsContent | undefined {
     linkedinLabel: str(record.linkedinLabel),
     location: str(record.location),
     previewBadge: str(record.previewBadge),
-    primaryCtaLabel: str(record.primaryCtaLabel, 'Book a call'),
-    primaryCtaHref: str(record.primaryCtaHref, '/contact#book'),
+    primaryCtaLabel: str(record.primaryCtaLabel, 'Get in touch'),
+    primaryCtaHref: str(record.primaryCtaHref, '/contact'),
     footerBlurb: str(record.footerBlurb),
     copyright: str(record.copyright),
     footerNote: str(record.footerNote),

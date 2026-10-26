@@ -9,9 +9,8 @@ import { Reveal } from '@/components/site/reveal'
 import { ScreenshotPlate } from '@/components/site/screenshot-plate'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
-import { caseSlots } from '@/content/portfolio'
-import { paragraphs } from '@/content/types'
-import type { Portfolio, ProjectContent } from '@/content/types'
+import { GatedLoopDiagram, TokenThemeDiagram } from '@/components/site/card-visuals'
+import { paragraphs, type Portfolio, type ProjectContent } from '@/content/types'
 
 function galleryFor(
   project: ProjectContent,
@@ -27,7 +26,6 @@ export function CaseStudy({
   portfolio: Portfolio
   project: ProjectContent
 }) {
-  const slots = caseSlots(portfolio.projects, project.caseSlug)
   const hero = galleryFor(project, 'hero')
   const problem = galleryFor(project, 'problem')
   const approach = galleryFor(project, 'approach')
@@ -48,22 +46,29 @@ export function CaseStudy({
           </Link>
           <div className="mt-10 flex flex-wrap items-center gap-3 font-mono text-[11px] tracking-[0.2em] uppercase">
             <span className="text-primary">
-              {project.kind === 'case' ? `Case ${project.index}` : `Slots ${slots.join(' · ')}`}
+              {project.kind === 'case' ? `Case ${project.index}` : `Summary ${project.index}`}
             </span>
             <span className="h-px w-8 bg-white/20" aria-hidden="true" />
-            {project.kind === 'case' ? (
+            {project.kind === 'case' && project.liveUrl ? (
               <Badge
                 variant="moss"
                 className="h-auto px-2.5 py-1 font-mono text-[11px] tracking-[0.16em] uppercase"
               >
                 <span className="size-1.5 rounded-full bg-moss" aria-hidden="true" /> Live
               </Badge>
-            ) : (
+            ) : project.kind === 'case' ? (
               <Badge
-                variant="crimson"
+                variant="gold"
                 className="h-auto px-2.5 py-1 font-mono text-[11px] tracking-[0.16em] uppercase"
               >
-                Case study TBD
+                Case study
+              </Badge>
+            ) : (
+              <Badge
+                variant="gold"
+                className="h-auto px-2.5 py-1 font-mono text-[11px] tracking-[0.16em] uppercase"
+              >
+                Résumé summary
               </Badge>
             )}
           </div>
@@ -71,13 +76,13 @@ export function CaseStudy({
             {project.title}
           </h1>
           <p className="mt-6 max-w-2xl text-xl leading-relaxed text-muted-foreground">
-            {project.kind === 'case' ? (
+            {project.caseSlug === 'biobuild' ? (
               <>
                 <span className="text-foreground">Natural Building · Philippine-Made.</span> Bamboo,
                 ecocrete, and rice-husk blocks — explained plainly, from San Carlos City.
               </>
             ) : (
-              'Case study in preparation. Content and screenshots will be published only after employer clearance.'
+              project.summary
             )}
           </p>
         </div>
@@ -105,6 +110,14 @@ export function CaseStudy({
               ) : null}
             </div>
           </div>
+        ) : project.caseSlug === 'att' ? (
+          <div className="site-container pb-16">
+            <GatedLoopDiagram variant="full" />
+          </div>
+        ) : project.caseSlug === 't-mobile' ? (
+          <div className="site-container pb-16">
+            <TokenThemeDiagram variant="full" />
+          </div>
         ) : (
           <div className="pb-4" />
         )}
@@ -116,13 +129,16 @@ export function CaseStudy({
             project.kind === 'case'
               ? [
                   { label: 'Role', value: project.role },
-                  { label: 'Year', value: project.year },
+                  {
+                    label: project.dates ? 'Dates' : 'Year',
+                    value: project.dates || project.year,
+                  },
                   { label: 'Location', value: project.location },
                 ]
               : [
                   { label: 'Role', value: project.role },
                   { label: 'Dates', value: project.dates },
-                  { label: 'Status', value: 'Pending clearance' },
+                  ...(project.location ? [{ label: 'Location', value: project.location }] : []),
                 ]
           }
           tags={project.stack}
@@ -138,7 +154,7 @@ export function CaseStudy({
             <Reveal>
               <Alert className="border-primary/20 bg-primary/5">
                 <ShieldCheck className="text-primary" />
-                <AlertTitle>NDA-safe stub</AlertTitle>
+                <AlertTitle>Full case study coming later</AlertTitle>
                 <AlertDescription>{project.ndaNote}</AlertDescription>
               </Alert>
             </Reveal>
@@ -158,7 +174,7 @@ export function CaseStudy({
                 <h2
                   id={`${section.anchor}-title`}
                   className={
-                    project.kind === 'corporate'
+                    !section.body
                       ? 'font-display text-3xl font-semibold tracking-tight text-muted-foreground/70 md:text-4xl'
                       : 'max-w-3xl font-display text-3xl leading-tight font-semibold tracking-tight text-foreground md:text-4xl'
                   }
@@ -225,20 +241,58 @@ export function CaseStudy({
                 </Reveal>
               ) : null}
 
+              {index === 1 && !approach && project.highlights.length > 0 ? (
+                <Reveal delay={0.1}>
+                  <ul className="mt-10 grid gap-3 md:grid-cols-3">
+                    {project.highlights.map((highlight) => (
+                      <li key={highlight.title} className="luminous rounded-2xl bg-card p-5">
+                        <p className="font-display text-lg font-semibold text-foreground">
+                          {highlight.title}
+                        </p>
+                        <p className="mt-1 text-sm text-muted-foreground">{highlight.body}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </Reveal>
+              ) : null}
+
               {index === 2 && project.facts.length > 0 ? (
                 <Reveal delay={0.1} className="mt-10">
-                  <div className="relative overflow-hidden rounded-2xl border border-moss/30 bg-card p-6 md:p-8">
+                  <div
+                    className={
+                      project.accent === 'gold'
+                        ? 'relative overflow-hidden rounded-2xl border border-primary/30 bg-card p-6 md:p-8'
+                        : 'relative overflow-hidden rounded-2xl border border-moss/30 bg-card p-6 md:p-8'
+                    }
+                  >
                     <span
-                      className="absolute inset-y-0 left-0 w-[3px] bg-moss"
+                      className={
+                        project.accent === 'gold'
+                          ? 'absolute inset-y-0 left-0 w-[3px] bg-primary'
+                          : 'absolute inset-y-0 left-0 w-[3px] bg-moss'
+                      }
                       aria-hidden="true"
                     />
-                    <p className="font-mono text-[11px] tracking-[0.2em] text-moss uppercase">
-                      Site facts
+                    <p
+                      className={
+                        project.accent === 'gold'
+                          ? 'font-mono text-[11px] tracking-[0.2em] text-primary uppercase'
+                          : 'font-mono text-[11px] tracking-[0.2em] text-moss uppercase'
+                      }
+                    >
+                      {project.caseSlug === 'biobuild' ? 'Site facts' : 'Facts'}
                     </p>
                     <ul className="mt-5 grid gap-3 sm:grid-cols-2">
                       {project.facts.map((fact) => (
                         <li key={fact} className="flex items-start gap-3 text-sm text-foreground">
-                          <Check className="mt-0.5 size-4 shrink-0 text-moss" aria-hidden="true" />
+                          <Check
+                            className={
+                              project.accent === 'gold'
+                                ? 'mt-0.5 size-4 shrink-0 text-primary'
+                                : 'mt-0.5 size-4 shrink-0 text-moss'
+                            }
+                            aria-hidden="true"
+                          />
                           {fact}
                         </li>
                       ))}
@@ -280,7 +334,7 @@ export function CaseStudy({
               className="group flex items-center justify-between rounded-2xl border border-border p-6 transition-colors hover:border-crimson/50"
             >
               <span>
-                <span className="block font-mono text-[11px] tracking-[0.2em] text-muted-foreground/60 uppercase">
+                <span className="block font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
                   Next — {project.nextIndex}
                 </span>
                 <span className="mt-1 block font-display text-2xl font-semibold text-foreground">

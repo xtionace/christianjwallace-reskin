@@ -263,6 +263,57 @@
   animation: ink-in 2.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+@keyframes folio-comic {
+  0%,
+  42% {
+    opacity: 1;
+  }
+  55%,
+  88% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes folio-prose {
+  0%,
+  42% {
+    opacity: 0;
+  }
+  55%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.process-watermark::before,
+.tbd-watermark::before {
+  content: attr(data-index);
+  color: rgba(255, 255, 255, 0.04);
+}
+
+.tbd-watermark::before {
+  content: attr(data-title);
+}
+
+.folio-comic {
+  animation: folio-comic 8s ease-in-out infinite;
+}
+
+.folio-prose {
+  animation: folio-prose 8s ease-in-out infinite;
+}
+
+.cta-solid:focus-visible {
+  outline: 2px solid var(--foreground) !important;
+  outline-offset: 3px !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -272,9 +323,14 @@
   .rule-in,
   .ink-in,
   .cta-solid,
-  .cta-solid:hover {
+  .cta-solid:hover,
+  .folio-comic,
+  .folio-prose {
     animation: none;
     transition: none;
     transform: none;
+  }
+  .folio-prose {
+    display: none;
   }
 }

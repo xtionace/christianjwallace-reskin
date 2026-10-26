@@ -1,6 +1,10 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
+import { pageMetadata } from '@/lib/page-metadata'
+
+export const metadata: Metadata = pageMetadata('Not found')
 
 export default function NotFound() {
   return (
@@ -10,7 +14,7 @@ export default function NotFound() {
         That page is not in the index.
       </h1>
       <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-        The slot may still be reserved, or the link no longer matches a case study.
+        The link does not match a page on this site.
       </p>
       <Button nativeButton={false} size="cta" className="mt-8" render={<Link href="/" />}>
         Back home

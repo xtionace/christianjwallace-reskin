@@ -47,7 +47,7 @@ export function ScreenshotPlate({
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
-      <figcaption className="absolute top-4 left-4 font-mono text-[10px] tracking-[0.18em] text-muted-foreground/60 uppercase">
+      <figcaption className="absolute top-4 left-4 font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
         {label}
       </figcaption>
     </figure>

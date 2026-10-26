@@ -34,7 +34,6 @@ export function SiteHeader({ settings }: { settings: SiteSettingsContent }) {
         <Link
           href="/"
           className="group flex items-center gap-3 rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-          aria-label={`${settings.name} — home`}
         >
           <span className="grid size-9 place-items-center rounded-lg border border-primary/30 bg-primary/10 font-display text-sm font-bold text-primary transition-colors group-hover:border-primary/60">
             CW

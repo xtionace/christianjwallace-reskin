@@ -7,6 +7,15 @@ const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
+  async headers() {
+    if (process.env.VERCEL_ENV !== 'preview') return []
+    return [
+      {
+        source: '/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+    ]
+  },
   experimental: {
     globalNotFound: true,
   },
@@ -15,12 +24,8 @@ const nextConfig: NextConfig = {
       {
         pathname: '/api/media/file/**',
       },
-    ],
-    remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'cdn.magicpatterns.com',
-        pathname: '/patterns/generated-images/**',
+        pathname: '/media/**',
       },
     ],
   },
