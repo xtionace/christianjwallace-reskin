@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { payloadMediaDir } from '@/lib/media-dir'
+
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
@@ -12,5 +14,7 @@ export const Media: CollectionConfig = {
       required: true,
     },
   ],
-  upload: true,
+  upload: {
+    staticDir: payloadMediaDir(),
+  },
 }

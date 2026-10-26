@@ -2,7 +2,7 @@
 
 Personal portfolio for **Christian Wallace**. The front end is template letter **E (Kinetic Craft Chromatic)**: a dark cinematic craft site, solid gold calls to action, an ink-wash accent, and a Selected Work rail.
 
-Forked from Reskin Base (Payload CMS + Next.js App Router + Tailwind CSS + shadcn/ui). **Extra $0** — SQLite on disk, no hosted database, no paid email, no paid services. Host the repo on free GitHub. Do not deploy or change DNS from this codebase; `christianjwallace.com` is DNS-only until you point it yourself.
+Forked from Reskin Base (Payload CMS + Next.js App Router + Tailwind CSS + shadcn/ui). Content is seeded from `src/content/portfolio.ts` into MongoDB. Shipped media stays in `public/media`. Self-hosting on the DreamHost VPS is `docs/self-hosting.md`. Do not deploy or change DNS from this codebase.
 
 Payload admin stays the stock Payload UI at `/admin`. The Kinetic Craft theme applies to the public site only.
 
@@ -10,7 +10,7 @@ Payload admin stays the stock Payload UI at `/admin`. The Kinetic Craft theme ap
 
 - Payload 3.x (TypeScript)
 - Next.js App Router
-- SQLite via `@payloadcms/db-sqlite`
+- MongoDB via `@payloadcms/db-mongodb`
 - Tailwind CSS v4 + shadcn/ui (base-nova) on the front end
 
 ## Run locally
@@ -19,14 +19,15 @@ Requires **Node 20+** and **pnpm**.
 
 ```bash
 pnpm install
-cp .env.example .env   # set PAYLOAD_SECRET to a long random string
+cp .env.example .env   # set PAYLOAD_SECRET and DATABASE_URI
+pnpm migrate:mongo
 pnpm dev
 ```
 
 - Site: [http://localhost:3000](http://localhost:3000)
 - Admin: [http://localhost:3000/admin](http://localhost:3000/admin)
 
-Create the first admin user on the first visit to `/admin`. The public copy is seeded on server start when the collections are empty. Later edits in admin are kept.
+The public copy is seeded from `src/content/portfolio.ts` when the collections are empty. Later edits in admin are kept. Create the first admin user on the first visit to `/admin`, or set `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD` before `pnpm migrate:mongo`.
 
 ```bash
 pnpm build
@@ -65,35 +66,25 @@ Sign in at `/admin`. Portfolio collections:
 - **Pages** — Home, Work, About, and Contact copy. Open the **Home** page. Blocks are keyed (`hero-line-1`, `log-heading`, `scroll-cue`, `selected`, `process`, `process-prefix`, `form-01`, `closing`, …). Change the words; leave the keys in place so the layout can find them. The homepage hero, session log, selected-work heading, process forms, and closing call to action all read these blocks.
 - **Projects** — the work index. BioBuild, AT&T, and T-Mobile are filled case studies. Earlier roles are short cards with coded illustrations, not photos. Cards with **Show on rail** appear in the homepage Selected Work rail.
 - **Inquiries** — messages from the contact form. Nothing is emailed (no paid mail service). Reply yourself from the address in Site settings.
-- **Media** — optional uploads. The BioBuild plates are files in `public/media`. Do not invent logos or stock photos.
+- **Media** — new admin uploads, stored on disk in `PAYLOAD_MEDIA_DIR` (local default `./media`, VPS `/srv/christianjwallace/media`). The BioBuild plates and card video are files in `public/media`. Do not invent logos or stock photos.
 
 Seed copy lives in `src/content/portfolio.ts` and is inserted only when a collection is empty. It comes from the E scrape plus the résumé and BioBuild facts in the content pack. It does not invent metrics, client case studies, or a phone number.
 
 ## Environment
 
-| Variable         | Purpose                                                                           |
-| ---------------- | --------------------------------------------------------------------------------- |
-| `PAYLOAD_SECRET` | Required. Secret for Payload auth and encryption. Read only from the environment. |
-| `DATABASE_URL`   | Optional SQLite file URL. Local default is `file:./reskin-base.db`.               |
+| Variable                  | Purpose                                                                                          |
+| ------------------------- | ------------------------------------------------------------------------------------------------ |
+| `PAYLOAD_SECRET`          | Required. Secret for Payload auth and encryption. Read only from the environment.                |
+| `DATABASE_URI`            | Required MongoDB connection string.                                                              |
+| `NEXT_PUBLIC_SERVER_URL`  | Canonical origin in production.                                                                  |
+| `PORT`                    | Port for `next start`. The VPS uses `3001`.                                                      |
+| `PAYLOAD_MEDIA_DIR`       | Directory for new admin uploads. Default `./media`.                                              |
+| `SEED_ADMIN_EMAIL`        | Optional. With `SEED_ADMIN_PASSWORD`, the migrate script creates one admin.                      |
+| `SEED_ADMIN_PASSWORD`     | Optional. Used only by `pnpm migrate:mongo`.                                                     |
 
-Copy `.env.example` to `.env`. Never commit `.env` or `*.db`. `PAYLOAD_SECRET` has no hard-coded fallback.
+Copy `.env.example` to `.env`. Never commit `.env`. `PAYLOAD_SECRET` has no hard-coded fallback. The VPS commands are in `docs/self-hosting.md`.
 
-### Vercel preview
-
-A preview deployment (`VERCEL_ENV=preview`) does not need a hosted database. If `DATABASE_URL` is unset, Payload uses `file:/tmp/portfolio.db`, runs the SQL migrations, and seeds the public copy on startup. That file is temporary. Do not set domain or redirect rules in `vercel.json` for this.
-
-Preview responses send `noindex, nofollow` when `VERCEL_ENV` is `preview` (robots metadata, `/robots.txt`, and `X-Robots-Tag`). Leave `VERCEL_ENV` unset in production so the site can be indexed.
-
-Set this on the Vercel project for Preview:
-
-| Variable         | Required | Notes                                   |
-| ---------------- | -------- | --------------------------------------- |
-| `PAYLOAD_SECRET` | Yes      | Long random string. Not committed.      |
-| `DATABASE_URL`   | No       | Leave unset so the preview uses `/tmp`. |
-
-`VERCEL_ENV` is set by Vercel. Do not add it yourself.
-
-Production boot runs the SQL migration in `src/migrations` so a fresh SQLite file gets its tables. Development still syncs the schema on startup.
+Preview responses send `noindex, nofollow` when `VERCEL_ENV` is `preview` (robots metadata, `/robots.txt`, and `X-Robots-Tag`). Leave `VERCEL_ENV` unset when the site should be indexed. `VERCEL_ENV` is set by Vercel. Do not add it yourself.
 
 ## Scripts
 
@@ -102,6 +93,7 @@ Production boot runs the SQL migration in `src/migrations` so a fresh SQLite fil
 | `pnpm dev`            | Dev server                 |
 | `pnpm build`          | Production build           |
 | `pnpm start`          | Serve the production build |
+| `pnpm migrate:mongo`  | Seed MongoDB from `src/content/portfolio.ts` |
 | `pnpm payload`        | Payload CLI                |
 | `pnpm generate:types` | Regenerate Payload types   |
 | `pnpm lint`           | ESLint                     |
@@ -114,9 +106,9 @@ Production boot runs the SQL migration in `src/migrations` so a fresh SQLite fil
 - There are no reserved slots. Tru-Line is not listed.
 - BioBuild images are the three plates from the E scrape, stored in `public/media`, not photos from the Fibercrete archive.
 - No public phone number.
-- Contact form stores inquiries in SQLite. It does not send mail.
+- Contact form stores inquiries in MongoDB. It does not send mail.
 - Earlier résumé roles and education are on About as lineage, not as case studies.
-- Search indexing is off only while `VERCEL_ENV=preview`. Launch steps, the Turso recommendation, and the DreamHost DNS records are in `docs/production-plan.md`.
+- Search indexing is off only while `VERCEL_ENV=preview`. Self-hosting is `docs/self-hosting.md`. `docs/production-plan.md` keeps the earlier Vercel notes; Turso was never created.
 
 ## License
 

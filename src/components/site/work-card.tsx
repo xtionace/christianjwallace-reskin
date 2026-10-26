@@ -18,19 +18,37 @@ const shell: Record<WorkStatus, string> = {
   reserved: 'border border-dashed border-white/12 bg-background/60',
 }
 
+/** Softens the carousel video into the card color. 32px at the top and bottom of the frame. */
+const videoEdgeFade = {
+  WebkitMaskImage:
+    'linear-gradient(to bottom, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%)',
+  maskImage:
+    'linear-gradient(to bottom, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%)',
+  WebkitMaskRepeat: 'no-repeat',
+  maskRepeat: 'no-repeat',
+  WebkitMaskSize: '100% 100%',
+  maskSize: '100% 100%',
+} as const
+
+/** Filled case studies use the wide card. Everything else uses the grid card. */
+export function workCardLayout(item: ProjectContent): 'rail' | 'grid' {
+  return item.status === 'filled' ? 'rail' : 'grid'
+}
+
 export function WorkCard({
   item,
   layout = 'grid',
-  playLoop = false,
-  cardBlurb,
   headingLevel = 'h3',
+  equalHeight = false,
 }: {
   item: ProjectContent
   layout?: 'rail' | 'grid'
-  playLoop?: boolean
-  cardBlurb?: string
   headingLevel?: 'h2' | 'h3'
+  /** Home carousel only. Share one media-row height so the headings line up. */
+  equalHeight?: boolean
 }) {
+  const playLoop = item.caseSlug === 'biobuild'
+  const cardBlurb = item.cardSummary || item.summary
   const mediaAspect = layout === 'rail' ? 'aspect-[16/10]' : 'aspect-[4/3]'
   const linked = Boolean(item.href) && item.kind !== 'card' && item.kind !== 'reserved'
   const showVisual = hasCardVisual(item.caseSlug)
@@ -42,21 +60,44 @@ export function WorkCard({
 
   const media = (
     <div
+      data-rail-media={equalHeight ? '' : undefined}
+      style={equalHeight ? { minHeight: 'var(--rail-media, auto)' } : undefined}
       className={cn(
         'relative w-full',
-        layout === 'rail' && 'flex grow flex-col justify-center',
-        lockAspect && 'overflow-hidden',
-        lockAspect && (layout === 'rail' ? 'aspect-[16/10] min-h-0' : mediaAspect),
+        equalHeight && 'flex h-auto flex-col justify-center bg-card',
+        !equalHeight && layout === 'rail' && !playLoop && 'flex grow flex-col justify-center',
+        !equalHeight && lockAspect && 'overflow-hidden',
+        // The BioBuild loop is 736×488. On the work page the box matches that frame.
+        // On the carousel the shared row may be taller, and the frame letterboxes inside it.
+        !equalHeight && playLoop && 'aspect-[736/488] bg-card',
+        !equalHeight &&
+          lockAspect &&
+          !playLoop &&
+          (layout === 'rail' ? 'aspect-[16/10] min-h-0' : mediaAspect),
       )}
     >
       {item.status === 'filled' && item.imageUrl ? (
         <>
           {playLoop ? (
-            <CardLoop
-              src="/media/biobuild-card-loop.mp4"
-              poster="/media/biobuild-card-poster.jpg"
-              alt="BioBuild Systems homepage."
-            />
+            equalHeight ? (
+              <div
+                data-rail-media-content=""
+                className="relative aspect-[736/488] w-full shrink-0"
+                style={videoEdgeFade}
+              >
+                <CardLoop
+                  src="/media/biobuild-card-loop.mp4"
+                  poster="/media/biobuild-card-poster.jpg"
+                  alt="BioBuild Systems homepage."
+                />
+              </div>
+            ) : (
+              <CardLoop
+                src="/media/biobuild-card-loop.mp4"
+                poster="/media/biobuild-card-poster.jpg"
+                alt="BioBuild Systems homepage."
+              />
+            )
           ) : (
             <Image
               src={item.imageUrl}
@@ -71,10 +112,17 @@ export function WorkCard({
               priority={layout === 'rail'}
             />
           )}
-          <div
-            className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,var(--card))]"
-            aria-hidden="true"
-          />
+          {equalHeight && playLoop ? null : (
+            <div
+              className={cn(
+                'absolute inset-0',
+                playLoop
+                  ? 'bg-[linear-gradient(180deg,transparent_82%,var(--card))]'
+                  : 'bg-[linear-gradient(180deg,transparent_40%,var(--card))]',
+              )}
+              aria-hidden="true"
+            />
+          )}
           {item.mediaBadge ? (
             <Badge
               variant="moss"
@@ -86,7 +134,15 @@ export function WorkCard({
           ) : null}
         </>
       ) : null}
-      {showVisual ? <CardVisual slug={item.caseSlug} /> : null}
+      {showVisual ? (
+        equalHeight ? (
+          <div data-rail-media-content="" className="w-full shrink-0">
+            <CardVisual slug={item.caseSlug} />
+          </div>
+        ) : (
+          <CardVisual slug={item.caseSlug} />
+        )
+      ) : null}
       {item.status === 'tbd' && !showVisual ? (
         <div className="relative size-full bg-secondary">
           <div
@@ -124,42 +180,8 @@ export function WorkCard({
     </div>
   )
 
-  const body = (
-    <Card
-      className={cn(
-        'relative h-full gap-0 overflow-hidden rounded-2xl py-0 ring-0',
-        shell[item.status],
-        goldCase && 'luminous border-primary/30',
-      )}
-    >
-      {item.status === 'filled' && !goldCase ? (
-        <span className="absolute inset-y-0 left-0 z-20 w-[3px] bg-moss" aria-hidden="true" />
-      ) : null}
-      {goldCase || item.status === 'summary' || item.status === 'card' ? (
-        <span className="absolute inset-y-0 left-0 z-20 w-[3px] bg-primary" aria-hidden="true" />
-      ) : null}
-      {item.status === 'tbd' ? (
-        <span
-          className="absolute inset-y-0 left-0 z-20 w-[3px] origin-top scale-y-0 bg-crimson transition-transform duration-500 group-hover:scale-y-100 motion-reduce:transition-none"
-          aria-hidden="true"
-        />
-      ) : null}
-      {item.status !== 'reserved' ? (
-        <span
-          className={cn(
-            'pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100 motion-reduce:transition-none',
-            item.status === 'filled' && !goldCase
-              ? 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--moss)_18%,transparent),transparent_60%)]'
-              : item.status === 'tbd'
-                ? 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--crimson)_18%,transparent),transparent_60%)]'
-                : 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--primary)_16%,transparent),transparent_60%)]',
-          )}
-          aria-hidden="true"
-        />
-      ) : null}
-
-      {media}
-
+  const cardCopy = (
+    <>
       <CardHeader className="relative z-20 px-5 pt-5 md:px-6">
         <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.18em] uppercase">
           <span
@@ -208,18 +230,16 @@ export function WorkCard({
           <p className="text-sm text-muted-foreground">{item.client}</p>
         )}
       </CardHeader>
-      <CardContent className="relative z-20 px-5 md:px-6">
-        <p className="text-sm leading-relaxed text-muted-foreground/80">
-          {cardBlurb || item.summary}
-        </p>
+      <CardContent className={cn('relative z-20 px-5 pb-copy md:px-6', equalHeight && 'grow')}>
+        <p className="text-sm leading-relaxed text-muted-foreground/80">{cardBlurb}</p>
         {item.status === 'summary' ? (
           <p className="mt-3 text-xs text-primary">Full case study coming later.</p>
         ) : null}
       </CardContent>
       <CardFooter
         className={cn(
-          'relative z-20 items-end justify-between gap-3 px-5 pt-5 pb-5 md:px-6 md:pb-6',
-          layout === 'grid' && 'mt-auto',
+          'relative z-20 items-end justify-between gap-3 px-5 pt-copy pb-copy md:px-6 md:pb-section',
+          (layout === 'grid' || equalHeight) && 'mt-auto',
         )}
       >
         <ul className="flex flex-wrap gap-1.5">
@@ -248,6 +268,51 @@ export function WorkCard({
           </span>
         ) : null}
       </CardFooter>
+    </>
+  )
+
+  const body = (
+    <Card
+      className={cn(
+        'relative h-full gap-0 overflow-hidden rounded-2xl py-0 ring-0',
+        equalHeight && 'min-h-min flex-1 flex-col',
+        shell[item.status],
+        goldCase && 'luminous border-primary/30',
+      )}
+    >
+      {item.status === 'filled' && !goldCase ? (
+        <span className="absolute inset-y-0 left-0 z-20 w-[3px] bg-moss" aria-hidden="true" />
+      ) : null}
+      {goldCase || item.status === 'summary' || item.status === 'card' ? (
+        <span className="absolute inset-y-0 left-0 z-20 w-[3px] bg-primary" aria-hidden="true" />
+      ) : null}
+      {item.status === 'tbd' ? (
+        <span
+          className="absolute inset-y-0 left-0 z-20 w-[3px] origin-top scale-y-0 bg-crimson transition-transform duration-500 group-hover:scale-y-100 motion-reduce:transition-none"
+          aria-hidden="true"
+        />
+      ) : null}
+      {item.status !== 'reserved' ? (
+        <span
+          className={cn(
+            'pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100 motion-reduce:transition-none',
+            item.status === 'filled' && !goldCase
+              ? 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--moss)_18%,transparent),transparent_60%)]'
+              : item.status === 'tbd'
+                ? 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--crimson)_18%,transparent),transparent_60%)]'
+                : 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--primary)_16%,transparent),transparent_60%)]',
+          )}
+          aria-hidden="true"
+        />
+      ) : null}
+
+      {media}
+
+      {equalHeight ? (
+        <div className="flex min-h-min w-full flex-1 flex-col">{cardCopy}</div>
+      ) : (
+        cardCopy
+      )}
     </Card>
   )
 
@@ -256,7 +321,7 @@ export function WorkCard({
       id={item.caseSlug ? `work-card-${item.caseSlug}` : undefined}
       data-project={item.caseSlug || undefined}
       className={cn(
-        'h-full w-full',
+        equalHeight ? 'flex h-full w-full min-h-min flex-1 flex-col' : 'h-full w-full',
         linked &&
           'transition-transform duration-300 hover:-translate-y-1.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0',
       )}
@@ -264,12 +329,17 @@ export function WorkCard({
       {linked ? (
         <Link
           href={item.href}
-          className="group block h-full rounded-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background focus-visible:outline-none"
+          className={cn(
+            'group h-full rounded-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background focus-visible:outline-none',
+            equalHeight ? 'flex min-h-min flex-1 flex-col' : 'block',
+          )}
         >
           {body}
         </Link>
       ) : (
-        <div className="group h-full">{body}</div>
+        <div className={cn('group h-full', equalHeight && 'flex min-h-min flex-1 flex-col')}>
+          {body}
+        </div>
       )}
     </div>
   )

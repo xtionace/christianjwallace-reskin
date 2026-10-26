@@ -16,8 +16,7 @@ function prefersReducedMotion() {
 
 export function CardLoop({ src, poster, alt }: { src: string; poster: string; alt: string }) {
   const reduceMotion = useSyncExternalStore(subscribe, prefersReducedMotion, () => true)
-  const frame =
-    'absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-[1.04] motion-reduce:transition-none'
+  const frame = 'absolute inset-0 size-full object-contain object-center'
 
   const videoRef = useRef<HTMLVideoElement>(null)
   useLayoutEffect(() => {

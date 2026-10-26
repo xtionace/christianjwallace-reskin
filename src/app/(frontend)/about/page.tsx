@@ -77,7 +77,7 @@ export default async function AboutPage() {
                 {current?.title}
               </p>
               <p className="text-muted-foreground">{current?.meta}</p>
-              <Separator className="my-5" />
+              <Separator className="my-copy" />
               <p className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
                 Also
               </p>

@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 
 import { Reveal } from '@/components/site/reveal'
-import { WorkCard } from '@/components/site/work-card'
+import { WorkCard, workCardLayout } from '@/components/site/work-card'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import type { PageDoc, ProjectContent, WorkStatus } from '@/content/types'
 import { block } from '@/content/types'
@@ -71,13 +71,12 @@ export function WorkIndex({
             delay={(index % 3) * 0.06}
             className={cn(
               item.status === 'filled' && filter === 'all' ? 'sm:col-span-2' : undefined,
+              item.caseSlug === 'biobuild' && 'self-start',
             )}
           >
             <WorkCard
               item={item}
-              layout={item.status === 'filled' && filter === 'all' ? 'rail' : 'grid'}
-              playLoop={item.caseSlug === 'biobuild'}
-              cardBlurb={item.cardSummary}
+              layout={filter === 'all' ? workCardLayout(item) : 'grid'}
               headingLevel="h2"
             />
           </Reveal>
