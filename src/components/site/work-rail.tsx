@@ -59,7 +59,7 @@ export function WorkRail({ items, label }: { items: ProjectContent[]; label?: st
     <div>
       <div
         ref={trackRef}
-        className="rail flex items-start gap-5 overflow-x-auto pt-2 pb-6"
+        className="rail flex items-stretch gap-5 overflow-x-auto pt-2 pb-6"
         style={{ paddingInline: railPadding, scrollPaddingInline: railPadding }}
         role="region"
         aria-roledescription="carousel"
@@ -80,12 +80,12 @@ export function WorkRail({ items, label }: { items: ProjectContent[]; label?: st
           <div
             key={item.index}
             className={cn(
-              'flex shrink-0 items-start',
+              'flex shrink-0 flex-col self-stretch',
               index === 0 ? 'w-[86%] sm:w-[64%] lg:w-[46%]' : 'w-[80%] sm:w-[48%] lg:w-[32%]',
             )}
             aria-label={`Slide ${index + 1} of ${items.length}`}
           >
-            <WorkCard item={item} layout={workCardLayout(item)} />
+            <WorkCard item={item} layout={workCardLayout(item)} equalHeight />
           </div>
         ))}
       </div>

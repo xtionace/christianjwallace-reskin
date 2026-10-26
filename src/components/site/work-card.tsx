@@ -27,10 +27,13 @@ export function WorkCard({
   item,
   layout = 'grid',
   headingLevel = 'h3',
+  equalHeight = false,
 }: {
   item: ProjectContent
   layout?: 'rail' | 'grid'
   headingLevel?: 'h2' | 'h3'
+  /** Home carousel only. Stretch the card and keep the extra space out of the media. */
+  equalHeight?: boolean
 }) {
   const playLoop = item.caseSlug === 'biobuild'
   const cardBlurb = item.cardSummary || item.summary
@@ -47,7 +50,8 @@ export function WorkCard({
     <div
       className={cn(
         'relative w-full',
-        layout === 'rail' && !playLoop && 'flex grow flex-col justify-center',
+        equalHeight && 'shrink-0',
+        !equalHeight && layout === 'rail' && !playLoop && 'flex grow flex-col justify-center',
         lockAspect && 'overflow-hidden',
         // The BioBuild loop is 736×488. Match that frame so the picture is not cropped.
         playLoop && 'aspect-[736/488] bg-card',
@@ -138,6 +142,7 @@ export function WorkCard({
     <Card
       className={cn(
         'relative h-full gap-0 overflow-hidden rounded-2xl py-0 ring-0',
+        equalHeight && 'min-h-0 flex-1 flex-col',
         shell[item.status],
         goldCase && 'luminous border-primary/30',
       )}
@@ -218,7 +223,7 @@ export function WorkCard({
           <p className="text-sm text-muted-foreground">{item.client}</p>
         )}
       </CardHeader>
-      <CardContent className="relative z-20 px-5 md:px-6">
+      <CardContent className={cn('relative z-20 px-5 md:px-6', equalHeight && 'flex-1')}>
         <p className="text-sm leading-relaxed text-muted-foreground/80">{cardBlurb}</p>
         {item.status === 'summary' ? (
           <p className="mt-3 text-xs text-primary">Full case study coming later.</p>
@@ -227,7 +232,7 @@ export function WorkCard({
       <CardFooter
         className={cn(
           'relative z-20 items-end justify-between gap-3 px-5 pt-5 pb-5 md:px-6 md:pb-6',
-          layout === 'grid' && 'mt-auto',
+          (layout === 'grid' || equalHeight) && 'mt-auto',
         )}
       >
         <ul className="flex flex-wrap gap-1.5">
@@ -264,7 +269,7 @@ export function WorkCard({
       id={item.caseSlug ? `work-card-${item.caseSlug}` : undefined}
       data-project={item.caseSlug || undefined}
       className={cn(
-        'h-full w-full',
+        equalHeight ? 'flex h-full w-full flex-1 flex-col' : 'h-full w-full',
         linked &&
           'transition-transform duration-300 hover:-translate-y-1.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0',
       )}
@@ -272,12 +277,15 @@ export function WorkCard({
       {linked ? (
         <Link
           href={item.href}
-          className="group block h-full rounded-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background focus-visible:outline-none"
+          className={cn(
+            'group h-full rounded-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background focus-visible:outline-none',
+            equalHeight ? 'flex min-h-0 flex-1 flex-col' : 'block',
+          )}
         >
           {body}
         </Link>
       ) : (
-        <div className="group h-full">{body}</div>
+        <div className={cn('group h-full', equalHeight && 'flex min-h-0 flex-1 flex-col')}>{body}</div>
       )}
     </div>
   )
