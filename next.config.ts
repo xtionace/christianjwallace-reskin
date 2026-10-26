@@ -24,12 +24,8 @@ const nextConfig: NextConfig = {
       {
         pathname: '/api/media/file/**',
       },
-    ],
-    remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'cdn.magicpatterns.com',
-        pathname: '/patterns/generated-images/**',
+        pathname: '/media/**',
       },
     ],
   },

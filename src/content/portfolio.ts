@@ -18,12 +18,9 @@ export function projectChrome(status: WorkStatus): { statusLabel: string; mediaB
 }
 
 /** Magic Patterns CDN plates already used by template E. Do not replace with stock photos. */
-export const BIOBUILD_HERO =
-  'https://cdn.magicpatterns.com/patterns/generated-images/91d926ab-06a2-405d-9115-4b495862080d.jpg'
-export const BIOBUILD_MATERIALS =
-  'https://cdn.magicpatterns.com/patterns/generated-images/e4dba941-30ad-4bc6-9601-dc4fd970e13a.jpg'
-export const BIOBUILD_DETAIL =
-  'https://cdn.magicpatterns.com/patterns/generated-images/9952b557-9389-4ff9-bda0-9a072be3b05d.jpg'
+export const BIOBUILD_HERO = '/media/biobuild-hero.jpg'
+export const BIOBUILD_MATERIALS = '/media/biobuild-materials.jpg'
+export const BIOBUILD_DETAIL = '/media/biobuild-detail.jpg'
 
 const emptyClosing: ProjectClosing = {
   eyebrow: '',

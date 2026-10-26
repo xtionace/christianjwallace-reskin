@@ -39,7 +39,7 @@ function ExperienceBody({ body }: { body?: string }) {
 export async function generateMetadata(): Promise<Metadata> {
   const portfolio = await getPortfolio()
   const page = pageBySlug(portfolio.pages, 'about')
-  return { title: page?.title ?? 'About' }
+  return { title: page?.title ?? 'About', description: page?.lede || undefined }
 }
 
 export default async function AboutPage() {
@@ -69,7 +69,7 @@ export default async function AboutPage() {
           </div>
           <Card className="luminous gap-0 rounded-2xl bg-card py-0 ring-0">
             <div className="p-6">
-              <p className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground/60 uppercase">
+              <p className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
                 {current?.label}
               </p>
               <p className="mt-2 font-display text-2xl font-semibold text-foreground">
@@ -77,7 +77,7 @@ export default async function AboutPage() {
               </p>
               <p className="text-muted-foreground">{current?.meta}</p>
               <Separator className="my-5" />
-              <p className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground/60 uppercase">
+              <p className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
                 Also
               </p>
               <p className="mt-2 text-foreground">{current?.kicker}</p>

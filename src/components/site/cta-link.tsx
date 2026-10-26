@@ -36,7 +36,7 @@ export function CtaLink({
         variant={variant === 'primary' ? 'default' : 'outline'}
         size="cta"
         className={classes}
-        render={<a href={href} target="_blank" rel="noreferrer" />}
+        render={<a href={href} target="_blank" rel="noopener noreferrer" />}
       >
         {content}
       </Button>

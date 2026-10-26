@@ -9,7 +9,15 @@ import type {
   WorkStatus,
 } from '@/content/types'
 
-const syncedSlugs = ['att', 't-mobile', 'optumcare', 'mcgraw-hill', 'kindle', 'fusion'] as const
+const syncedSlugs = [
+  'att',
+  't-mobile',
+  'optumcare',
+  'mcgraw-hill',
+  'kindle',
+  'fusion',
+  'biobuild',
+] as const
 
 function labels(values: string[]) {
   return values.map((label) => ({ label }))
@@ -170,6 +178,9 @@ async function syncSeededCopy(payload: Payload) {
     const data: {
       summary?: string
       cardSummary?: string
+      imageUrl?: string
+      imageAlt?: string
+      gallery?: ProjectContent['gallery']
       log?: ProjectContent['log']
       sections?: ProjectContent['sections']
       highlights?: ProjectContent['highlights']
@@ -179,6 +190,15 @@ async function syncSeededCopy(payload: Payload) {
     const currentCard = typeof project.cardSummary === 'string' ? project.cardSummary : ''
     const nextCard = seeded.cardSummary ?? ''
     if (currentCard !== nextCard) data.cardSummary = nextCard
+
+    if (slug === 'biobuild') {
+      const imageUrl = typeof project.imageUrl === 'string' ? project.imageUrl : ''
+      if (imageUrl.includes('magicpatterns.com')) {
+        data.imageUrl = seeded.imageUrl
+        data.imageAlt = seeded.imageAlt
+        data.gallery = seeded.gallery
+      }
+    }
 
     if (slug === 't-mobile') {
       const first = Array.isArray(project.sections) ? project.sections[0] : undefined

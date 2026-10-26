@@ -8,7 +8,7 @@ import { getPortfolio } from '@/lib/get-portfolio'
 export async function generateMetadata(): Promise<Metadata> {
   const portfolio = await getPortfolio()
   const page = pageBySlug(portfolio.pages, 'work')
-  return { title: page?.title ?? 'Work' }
+  return { title: page?.title ?? 'Work', description: page?.lede || undefined }
 }
 
 export default async function WorkPage() {

@@ -78,6 +78,7 @@ export function WorkIndex({
               layout={item.status === 'filled' && filter === 'all' ? 'rail' : 'grid'}
               playLoop={item.caseSlug === 'biobuild'}
               cardBlurb={item.cardSummary}
+              headingLevel="h2"
             />
           </Reveal>
         ))}

@@ -37,7 +37,7 @@ export function CaseMeta({
         <dl className="flex flex-col gap-4 p-6">
           {rows.map((row) => (
             <div key={row.label}>
-              <dt className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground/60 uppercase">
+              <dt className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
                 {row.label}
               </dt>
               <dd className="mt-1 text-sm text-foreground">{row.value}</dd>
@@ -46,7 +46,7 @@ export function CaseMeta({
         </dl>
         {tags && tags.length > 0 ? (
           <div className="border-t border-border px-6 pt-5 pb-6">
-            <p className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground/60 uppercase">
+            <p className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
               Stack
             </p>
             <ul className="mt-3 flex flex-wrap gap-1.5">
@@ -65,8 +65,8 @@ export function CaseMeta({
             <a
               href={liveUrl}
               target="_blank"
-              rel="noreferrer"
-              className="flex items-center justify-between rounded-xl border border-moss/30 bg-moss/10 px-4 py-3 text-sm text-foreground transition-colors hover:border-moss/60"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between rounded-xl border border-moss/30 bg-moss/10 px-4 py-3 text-sm text-foreground transition-colors hover:border-moss/60 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               <span>
                 <span className="block font-mono text-[10px] tracking-[0.2em] text-moss uppercase">
@@ -80,7 +80,7 @@ export function CaseMeta({
         ) : null}
         {log && log.length > 0 ? (
           <div className="border-t border-border px-6 pt-5 pb-6">
-            <p className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground/60 uppercase">
+            <p className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
               Notes
             </p>
             <ol className="mt-3 flex flex-col gap-2">

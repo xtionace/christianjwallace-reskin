@@ -11,7 +11,7 @@ import { getPortfolio } from '@/lib/get-portfolio'
 export async function generateMetadata(): Promise<Metadata> {
   const portfolio = await getPortfolio()
   const page = pageBySlug(portfolio.pages, 'contact')
-  return { title: page?.title ?? 'Contact' }
+  return { title: page?.title ?? 'Contact', description: page?.lede || undefined }
 }
 
 export default async function ContactPage() {
@@ -85,7 +85,7 @@ export default async function ContactPage() {
               <li className="flex items-center justify-between gap-3">
                 <a
                   href={`mailto:${portfolio.settings.email}`}
-                  className="flex items-center gap-3 text-foreground hover:text-primary"
+                  className="flex items-center gap-3 rounded-sm text-foreground hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                 >
                   <Mail className="size-4 text-primary" aria-hidden="true" />{' '}
                   {portfolio.settings.email}
@@ -96,8 +96,8 @@ export default async function ContactPage() {
                 <a
                   href={portfolio.settings.linkedinUrl}
                   target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-3 text-foreground hover:text-primary"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 rounded-sm text-foreground hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                 >
                   <span
                     className="font-mono text-[11px] font-semibold text-primary"

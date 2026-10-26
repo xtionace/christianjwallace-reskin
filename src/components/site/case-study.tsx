@@ -334,7 +334,7 @@ export function CaseStudy({
               className="group flex items-center justify-between rounded-2xl border border-border p-6 transition-colors hover:border-crimson/50"
             >
               <span>
-                <span className="block font-mono text-[11px] tracking-[0.2em] text-muted-foreground/60 uppercase">
+                <span className="block font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
                   Next — {project.nextIndex}
                 </span>
                 <span className="mt-1 block font-display text-2xl font-semibold text-foreground">

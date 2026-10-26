@@ -291,12 +291,27 @@
   }
 }
 
+.process-watermark::before,
+.tbd-watermark::before {
+  content: attr(data-index);
+  color: rgba(255, 255, 255, 0.04);
+}
+
+.tbd-watermark::before {
+  content: attr(data-title);
+}
+
 .folio-comic {
   animation: folio-comic 8s ease-in-out infinite;
 }
 
 .folio-prose {
   animation: folio-prose 8s ease-in-out infinite;
+}
+
+.cta-solid:focus-visible {
+  outline: 2px solid var(--foreground) !important;
+  outline-offset: 3px !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

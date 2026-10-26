@@ -23,11 +23,13 @@ export function WorkCard({
   layout = 'grid',
   playLoop = false,
   cardBlurb,
+  headingLevel = 'h3',
 }: {
   item: ProjectContent
   layout?: 'rail' | 'grid'
   playLoop?: boolean
   cardBlurb?: string
+  headingLevel?: 'h2' | 'h3'
 }) {
   const mediaAspect = layout === 'rail' ? 'aspect-[16/10]' : 'aspect-[4/3]'
   const linked = Boolean(item.href) && item.kind !== 'card' && item.kind !== 'reserved'
@@ -36,6 +38,7 @@ export function WorkCard({
   const lockAspect = photo || !showVisual
   const goldCase = item.status === 'filled' && item.accent === 'gold'
   const showRole = item.status === 'summary' || item.status === 'card' || goldCase
+  const Title = headingLevel
 
   const media = (
     <div className={cn('relative', lockAspect && 'overflow-hidden', lockAspect && mediaAspect)}>
@@ -87,9 +90,11 @@ export function WorkCard({
             }}
             aria-hidden="true"
           />
-          <span className="absolute -bottom-4 right-3 font-display text-[88px] leading-none font-bold text-white/4 select-none">
-            {item.title}
-          </span>
+          <span
+            className="tbd-watermark absolute -bottom-4 right-3 font-display text-[88px] leading-none font-bold select-none"
+            data-title={item.title}
+            aria-hidden="true"
+          />
           {item.mediaBadge ? (
             <div className="absolute inset-0 grid place-items-center">
               <Badge
@@ -175,14 +180,14 @@ export function WorkCard({
             {item.statusLabel}
           </span>
         </div>
-        <h3
+        <Title
           className={cn(
             'font-display font-semibold tracking-tight text-foreground',
             layout === 'rail' ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl',
           )}
         >
           {item.title}
-        </h3>
+        </Title>
         {showRole ? (
           <div>
             <p className="text-sm text-foreground/90">{item.role}</p>
@@ -248,7 +253,6 @@ export function WorkCard({
         <Link
           href={item.href}
           className="group block h-full rounded-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background focus-visible:outline-none"
-          aria-label={`${item.index} ${item.title} — ${item.role || item.client}`}
         >
           {body}
         </Link>

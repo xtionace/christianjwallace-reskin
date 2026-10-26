@@ -23,7 +23,7 @@ export function SiteFooter({ settings }: { settings: SiteSettingsContent }) {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-muted-foreground transition-colors hover:text-primary"
+                  className="rounded-sm text-muted-foreground transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                 >
                   {link.label}
                 </Link>
@@ -39,7 +39,7 @@ export function SiteFooter({ settings }: { settings: SiteSettingsContent }) {
             <li>
               <a
                 href={`mailto:${settings.email}`}
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary"
+                className="inline-flex items-center gap-2 rounded-sm text-muted-foreground hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
                 <Mail className="size-4" aria-hidden="true" /> {settings.email}
               </a>
@@ -48,8 +48,8 @@ export function SiteFooter({ settings }: { settings: SiteSettingsContent }) {
               <a
                 href={settings.linkedinUrl}
                 target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-sm text-muted-foreground hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
                 <span className="font-mono text-[11px] font-semibold" aria-hidden="true">
                   in
@@ -64,7 +64,7 @@ export function SiteFooter({ settings }: { settings: SiteSettingsContent }) {
         </div>
       </div>
       <Separator />
-      <div className="site-container flex flex-col gap-2 py-5 font-mono text-[11px] tracking-[0.16em] text-muted-foreground/60 uppercase sm:flex-row sm:justify-between">
+      <div className="site-container flex flex-col gap-2 py-5 font-mono text-[11px] tracking-[0.16em] text-muted-foreground uppercase sm:flex-row sm:justify-between">
         <span>{settings.copyright}</span>
         <span>{settings.footerNote}</span>
       </div>

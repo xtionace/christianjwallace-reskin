@@ -114,7 +114,7 @@ export function HomeHero({ page }: { page: PageDoc | undefined }) {
         </div>
       </div>
 
-      <div className="site-container relative flex items-center gap-3 pb-8 font-mono text-[11px] tracking-[0.2em] text-muted-foreground/60 uppercase">
+      <div className="site-container relative flex items-center gap-3 pb-8 font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
         <ArrowDown className="size-3.5" aria-hidden="true" /> {scrollCue?.label}
       </div>
     </section>

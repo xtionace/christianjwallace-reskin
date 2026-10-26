@@ -55,7 +55,7 @@ Public pages: Home, Work index, About, Contact, and case studies for BioBuild, A
 | `/contact`       | A short call (mailto) and a note saved in admin           |
 | `/admin`         | Stock Payload admin                                       |
 
-`/robots.txt` disallows indexing, matching the footer line “Private prototype — not indexed.” Remove that disallow in `src/app/robots.ts`, and clear the preview badge and footer note in Site settings, when the site should be public.
+Indexing follows `VERCEL_ENV`. A preview deployment (`VERCEL_ENV=preview`) sends `noindex`, disallows `/` in `/robots.txt`, hides the sitemap, and shows the “Private preview” badge. Any other environment, including a DreamHost production build, allows crawling, publishes `/sitemap.xml`, and hides that badge. Leave the switch in place.
 
 ## Edit content
 
@@ -65,7 +65,7 @@ Sign in at `/admin`. Portfolio collections:
 - **Pages** — Home, Work, About, and Contact copy. Open the **Home** page. Blocks are keyed (`hero-line-1`, `log-heading`, `scroll-cue`, `selected`, `process`, `process-prefix`, `form-01`, `closing`, …). Change the words; leave the keys in place so the layout can find them. The homepage hero, session log, selected-work heading, process forms, and closing call to action all read these blocks.
 - **Projects** — the work index. BioBuild, AT&T, and T-Mobile are filled case studies. Earlier roles are short cards with coded illustrations, not photos. Cards with **Show on rail** appear in the homepage Selected Work rail.
 - **Inquiries** — messages from the contact form. Nothing is emailed (no paid mail service). Reply yourself from the address in Site settings.
-- **Media** — optional uploads. The BioBuild plates currently use the CDN URLs already in the E scrape. Do not invent logos or stock photos.
+- **Media** — optional uploads. The BioBuild plates are files in `public/media`. Do not invent logos or stock photos.
 
 Seed copy lives in `src/content/portfolio.ts` and is inserted only when a collection is empty. It comes from the E scrape plus the résumé and BioBuild facts in the content pack. It does not invent metrics, client case studies, or a phone number.
 
@@ -82,7 +82,7 @@ Copy `.env.example` to `.env`. Never commit `.env` or `*.db`. `PAYLOAD_SECRET` h
 
 A preview deployment (`VERCEL_ENV=preview`) does not need a hosted database. If `DATABASE_URL` is unset, Payload uses `file:/tmp/portfolio.db`, runs the SQL migrations, and seeds the public copy on startup. That file is temporary. Do not set domain or redirect rules in `vercel.json` for this.
 
-Preview responses send `noindex, nofollow` (robots metadata on the public layout, plus `X-Robots-Tag` when `VERCEL_ENV` is `preview`).
+Preview responses send `noindex, nofollow` when `VERCEL_ENV` is `preview` (robots metadata, `/robots.txt`, and `X-Robots-Tag`). Leave `VERCEL_ENV` unset in production so the site can be indexed.
 
 Set this on the Vercel project for Preview:
 
@@ -110,13 +110,13 @@ Production boot runs the SQL migration in `src/migrations` so a fresh SQLite fil
 
 - AT&T is a case study from the interview notes: two AI toolkits, a coded gated-loop diagram, and shipping velocity written as 5-10 PRs a month to 40. No internal screenshots or internal tool names.
 - T-Mobile is a case study from the interview notes: consumer design system, a Metro theme on the same components, and color tokens for iOS, Android, and web. The diagram is coded. No screenshots and no internal tool names.
-- Earlier employers are short cards. Xbox uses a placeholder release table, labeled as an illustration — not real game names or release data.
+- Earlier employers are short cards. The Xbox card illustrates four public 2017 titles (Halo Wars 2, Cuphead, Forza Motorsport 7, Super Lucky's Tale) with release dates checked against Wikipedia and Xbox Wire. The statuses are illustration labels.
 - There are no reserved slots. Tru-Line is not listed.
-- BioBuild images are the three Magic Patterns CDN plates from the E scrape, not photos from the Fibercrete archive.
+- BioBuild images are the three plates from the E scrape, stored in `public/media`, not photos from the Fibercrete archive.
 - No public phone number.
 - Contact form stores inquiries in SQLite. It does not send mail.
 - Earlier résumé roles and education are on About as lineage, not as case studies.
-- The site is `noindex` until you change `src/app/robots.ts` and the footer note.
+- Search indexing is off only while `VERCEL_ENV=preview`. Before a public launch: set a real `PAYLOAD_SECRET`, point `DATABASE_URL` at a persistent database (not SQLite in `/tmp`), and create the first user at `/admin`.
 
 ## License
 

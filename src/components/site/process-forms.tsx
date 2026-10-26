@@ -38,11 +38,10 @@ export function ProcessForms({ page }: { page: PageDoc | undefined }) {
                 <p className="mt-1 text-sm font-medium text-violet-soft">{form.kicker}</p>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{form.body}</p>
                 <span
-                  className="mt-auto pt-8 font-display text-6xl leading-none font-bold text-white/4"
+                  className="process-watermark mt-auto block pt-8 font-display text-6xl leading-none font-bold"
+                  data-index={form.label}
                   aria-hidden="true"
-                >
-                  {form.label}
-                </span>
+                />
               </div>
             </Reveal>
           ))}
