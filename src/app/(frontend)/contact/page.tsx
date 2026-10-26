@@ -7,11 +7,12 @@ import { CtaLink } from '@/components/site/cta-link'
 import { Card } from '@/components/ui/card'
 import { block, blocksByPrefix, pageBySlug } from '@/content/types'
 import { getPortfolio } from '@/lib/get-portfolio'
+import { pageMetadata } from '@/lib/page-metadata'
 
 export async function generateMetadata(): Promise<Metadata> {
   const portfolio = await getPortfolio()
   const page = pageBySlug(portfolio.pages, 'contact')
-  return { title: page?.title ?? 'Contact', description: page?.lede || undefined }
+  return pageMetadata(page?.title ?? 'Contact', page?.lede || undefined)
 }
 
 export default async function ContactPage() {
@@ -82,13 +83,15 @@ export default async function ContactPage() {
 
           <Card className="luminous gap-0 rounded-3xl bg-card py-0 ring-0">
             <ul className="flex flex-col gap-4 p-7">
-              <li className="flex items-center justify-between gap-3">
+              <li className="flex min-w-0 flex-wrap items-center gap-3">
                 <a
                   href={`mailto:${portfolio.settings.email}`}
-                  className="flex items-center gap-3 rounded-sm text-foreground hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                  className="flex min-w-0 items-center gap-3 rounded-sm text-foreground hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                 >
-                  <Mail className="size-4 text-primary" aria-hidden="true" />{' '}
-                  {portfolio.settings.email}
+                  <Mail className="size-4 shrink-0 text-primary" aria-hidden="true" />
+                  <span className="min-w-0 break-all [overflow-wrap:anywhere]">
+                    {portfolio.settings.email}
+                  </span>
                 </a>
                 <CopyEmail email={portfolio.settings.email} />
               </li>

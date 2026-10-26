@@ -29,25 +29,27 @@ export const dynamic = 'force-dynamic'
 const description =
   'Christian Wallace makes complex products feel simple, and he builds the systems that keep them that way.'
 
+const siteTitle = {
+  default: 'Christian Wallace, principal software engineer',
+  template: '%s · Christian Wallace',
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const preview = isPreviewDeployment()
   return {
     metadataBase: new URL('https://christianjwallace.com'),
-    title: {
-      default: 'Christian Wallace, principal software engineer',
-      template: '%s · Christian Wallace',
-    },
+    title: siteTitle,
     description,
     robots: preview ? { index: false, follow: false } : { index: true, follow: true },
     openGraph: {
-      title: 'Christian Wallace, principal software engineer',
+      title: siteTitle,
       description,
       siteName: 'Christian Wallace',
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Christian Wallace, principal software engineer',
+      title: siteTitle,
       description,
     },
   }

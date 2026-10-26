@@ -80,7 +80,7 @@ export function WorkRail({ items, label }: { items: ProjectContent[]; label?: st
           <div
             key={item.index}
             className={cn(
-              'shrink-0',
+              'flex shrink-0 self-stretch',
               index === 0 ? 'w-[86%] sm:w-[64%] lg:w-[46%]' : 'w-[80%] sm:w-[48%] lg:w-[32%]',
             )}
             aria-label={`Slide ${index + 1} of ${items.length}`}

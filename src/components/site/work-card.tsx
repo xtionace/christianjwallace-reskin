@@ -41,7 +41,14 @@ export function WorkCard({
   const Title = headingLevel
 
   const media = (
-    <div className={cn('relative', lockAspect && 'overflow-hidden', lockAspect && mediaAspect)}>
+    <div
+      className={cn(
+        'relative w-full',
+        layout === 'rail' && 'flex grow flex-col justify-center',
+        lockAspect && 'overflow-hidden',
+        lockAspect && (layout === 'rail' ? 'aspect-[16/10] min-h-0' : mediaAspect),
+      )}
+    >
       {item.status === 'filled' && item.imageUrl ? (
         <>
           {playLoop ? (
@@ -209,7 +216,12 @@ export function WorkCard({
           <p className="mt-3 text-xs text-primary">Full case study coming later.</p>
         ) : null}
       </CardContent>
-      <CardFooter className="relative z-20 mt-auto items-end justify-between gap-3 px-5 pt-5 pb-5 md:px-6 md:pb-6">
+      <CardFooter
+        className={cn(
+          'relative z-20 items-end justify-between gap-3 px-5 pt-5 pb-5 md:px-6 md:pb-6',
+          layout === 'grid' && 'mt-auto',
+        )}
+      >
         <ul className="flex flex-wrap gap-1.5">
           {item.tags.map((tag) => (
             <li key={tag}>
@@ -244,7 +256,7 @@ export function WorkCard({
       id={item.caseSlug ? `work-card-${item.caseSlug}` : undefined}
       data-project={item.caseSlug || undefined}
       className={cn(
-        'h-full',
+        'h-full w-full',
         linked &&
           'transition-transform duration-300 hover:-translate-y-1.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0',
       )}

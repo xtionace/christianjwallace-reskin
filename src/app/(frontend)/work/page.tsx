@@ -4,11 +4,12 @@ import { ClosingCta } from '@/components/site/closing-cta'
 import { WorkIndex } from '@/components/site/work-index'
 import { block, pageBySlug } from '@/content/types'
 import { getPortfolio } from '@/lib/get-portfolio'
+import { pageMetadata } from '@/lib/page-metadata'
 
 export async function generateMetadata(): Promise<Metadata> {
   const portfolio = await getPortfolio()
   const page = pageBySlug(portfolio.pages, 'work')
-  return { title: page?.title ?? 'Work', description: page?.lede || undefined }
+  return pageMetadata(page?.title ?? 'Work', page?.lede || undefined)
 }
 
 export default async function WorkPage() {

@@ -545,12 +545,12 @@ function ComicPage() {
           </g>
           <rect x="186" y="78" width="2" height="2" fill="#c44536" />
           <polygon points="70,96 118,84 168,98 168,118 70,118" fill="#1a140c" />
-          <path d="M108 58 L86 104 L118 86 L150 104 L128 58 Z" fill="#5c4d86" />
+          <path d="M108 58 L86 104 L118 86 L150 104 L128 58 Z" fill="#6d5c9a" />
           <path
             d="M112 52 h16 v28 l5 18 h-7 l-6-16 l-6 16 h-7 l5-18 z"
-            fill="#0e1116"
+            fill="#3d4b63"
           />
-          <path d="M112 46 L117 32 L122 44 L127 32 L132 46 v12 h-20 z" fill="#0e1116" />
+          <path d="M112 46 L117 32 L122 44 L127 32 L132 46 v12 h-20 z" fill="#3d4b63" />
         </svg>
       </div>
       <div className="flex min-w-0 flex-col overflow-hidden rounded-sm border border-primary/30 bg-[#10161f]">
@@ -559,9 +559,20 @@ function ComicPage() {
       </div>
       <div className="flex min-w-0 flex-col overflow-hidden rounded-sm border border-primary/30 bg-[#10161f]">
         <SkylineStrip />
-        <p className="m-1 rounded-lg bg-[#f6f1e6] px-1.5 py-1 text-center text-[10px] leading-snug font-semibold text-[#1c1810]">
-          Next page!
-        </p>
+        <div className="px-1 pt-1 pb-2.5">
+          <div className="relative">
+            <p className="rounded-lg bg-[#f6f1e6] px-1.5 py-1 text-center text-[10px] leading-snug font-semibold text-[#1c1810]">
+              Next page!
+            </p>
+            <svg
+              viewBox="0 0 16 10"
+              aria-hidden="true"
+              className="absolute top-full left-2.5 h-2 w-3.5"
+            >
+              <path d="M0 0 H12 L2 10 Z" fill="#f6f1e6" />
+            </svg>
+          </div>
+        </div>
       </div>
     </div>
   )

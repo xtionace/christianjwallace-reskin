@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { block, blocksByPrefix, pageBySlug } from '@/content/types'
 import { getPortfolio } from '@/lib/get-portfolio'
+import { pageMetadata } from '@/lib/page-metadata'
 import { cn } from '@/lib/utils'
 
 function ExperienceBody({ body }: { body?: string }) {
@@ -39,7 +40,7 @@ function ExperienceBody({ body }: { body?: string }) {
 export async function generateMetadata(): Promise<Metadata> {
   const portfolio = await getPortfolio()
   const page = pageBySlug(portfolio.pages, 'about')
-  return { title: page?.title ?? 'About', description: page?.lede || undefined }
+  return pageMetadata(page?.title ?? 'About', page?.lede || undefined)
 }
 
 export default async function AboutPage() {
@@ -55,24 +56,24 @@ export default async function AboutPage() {
   return (
     <>
       <section className="border-b border-border bg-[linear-gradient(180deg,var(--card),var(--background))]">
-        <div className="site-container grid gap-12 py-20 md:py-28 lg:grid-cols-[1.5fr_1fr] lg:items-end">
-          <div>
+        <div className="site-container grid min-w-0 gap-12 py-20 md:py-28 lg:grid-cols-[1.5fr_1fr] lg:items-end">
+          <div className="min-w-0">
             <p className="mb-6 font-mono text-xs tracking-[0.22em] text-primary uppercase">
               {page?.eyebrow}
             </p>
-            <h1 className="font-display text-5xl leading-[1] font-semibold tracking-[-0.03em] text-foreground md:text-7xl">
+            <h1 className="font-display text-5xl leading-[1] font-semibold tracking-[-0.03em] break-words text-foreground md:text-7xl">
               {page?.headline} <span className="text-muted-foreground">{page?.headlineAccent}</span>
             </h1>
             <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">
               {page?.lede}
             </p>
           </div>
-          <Card className="luminous gap-0 rounded-2xl bg-card py-0 ring-0">
+          <Card className="luminous min-w-0 gap-0 rounded-2xl bg-card py-0 ring-0">
             <div className="p-6">
               <p className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
                 {current?.label}
               </p>
-              <p className="mt-2 font-display text-2xl font-semibold text-foreground">
+              <p className="mt-2 font-display text-2xl font-semibold break-words text-foreground">
                 {current?.title}
               </p>
               <p className="text-muted-foreground">{current?.meta}</p>

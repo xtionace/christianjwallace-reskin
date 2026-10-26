@@ -13,6 +13,7 @@ export function CopyEmail({ email }: { email: string }) {
       type="button"
       variant="outline"
       size="sm"
+      className="shrink-0"
       aria-live="polite"
       onClick={async () => {
         try {
