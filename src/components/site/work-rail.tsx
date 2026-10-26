@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { WorkCard, workCardLayout } from '@/components/site/work-card'
@@ -13,6 +13,26 @@ const railPadding = 'max(1.5rem, calc((100vw - 1320px) / 2 + 1.5rem))'
 export function WorkRail({ items, label }: { items: ProjectContent[]; label?: string }) {
   const trackRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(0)
+  const [mediaMin, setMediaMin] = useState(0)
+
+  // One shared media height: the tallest diagram, or the BioBuild frame at this width.
+  useLayoutEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    const measure = () => {
+      const contents = track.querySelectorAll<HTMLElement>('[data-rail-media-content]')
+      let max = 0
+      contents.forEach((content) => {
+        if (content.offsetHeight > max) max = content.offsetHeight
+      })
+      setMediaMin((prev) => (prev === max ? prev : max))
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(track)
+    Array.from(track.children).forEach((child) => observer.observe(child))
+    return () => observer.disconnect()
+  }, [items])
 
   const updateActive = useCallback(() => {
     const track = trackRef.current
@@ -60,7 +80,13 @@ export function WorkRail({ items, label }: { items: ProjectContent[]; label?: st
       <div
         ref={trackRef}
         className="rail flex items-stretch gap-5 overflow-x-auto pt-2 pb-6"
-        style={{ paddingInline: railPadding, scrollPaddingInline: railPadding }}
+        style={
+          {
+            paddingInline: railPadding,
+            scrollPaddingInline: railPadding,
+            '--rail-media': mediaMin ? `${mediaMin}px` : 'auto',
+          } as CSSProperties
+        }
         role="region"
         aria-roledescription="carousel"
         aria-label={label}

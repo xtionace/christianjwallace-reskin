@@ -32,7 +32,7 @@ export function WorkCard({
   item: ProjectContent
   layout?: 'rail' | 'grid'
   headingLevel?: 'h2' | 'h3'
-  /** Home carousel only. Stretch the card and keep the extra space out of the media. */
+  /** Home carousel only. Share one media-row height so the headings line up. */
   equalHeight?: boolean
 }) {
   const playLoop = item.caseSlug === 'biobuild'
@@ -48,24 +48,44 @@ export function WorkCard({
 
   const media = (
     <div
+      data-rail-media={equalHeight ? '' : undefined}
+      style={equalHeight ? { minHeight: 'var(--rail-media, auto)' } : undefined}
       className={cn(
         'relative w-full',
-        equalHeight && 'shrink-0',
+        equalHeight && 'flex h-auto flex-col justify-center bg-card',
         !equalHeight && layout === 'rail' && !playLoop && 'flex grow flex-col justify-center',
-        lockAspect && 'overflow-hidden',
-        // The BioBuild loop is 736×488. Match that frame so the picture is not cropped.
-        playLoop && 'aspect-[736/488] bg-card',
-        lockAspect && !playLoop && (layout === 'rail' ? 'aspect-[16/10] min-h-0' : mediaAspect),
+        !equalHeight && lockAspect && 'overflow-hidden',
+        // The BioBuild loop is 736×488. On the work page the box matches that frame.
+        // On the carousel the shared row may be taller, and the frame letterboxes inside it.
+        !equalHeight && playLoop && 'aspect-[736/488] bg-card',
+        !equalHeight &&
+          lockAspect &&
+          !playLoop &&
+          (layout === 'rail' ? 'aspect-[16/10] min-h-0' : mediaAspect),
       )}
     >
       {item.status === 'filled' && item.imageUrl ? (
         <>
           {playLoop ? (
-            <CardLoop
-              src="/media/biobuild-card-loop.mp4"
-              poster="/media/biobuild-card-poster.jpg"
-              alt="BioBuild Systems homepage."
-            />
+            equalHeight ? (
+              <div data-rail-media-content="" className="relative aspect-[736/488] w-full shrink-0">
+                <CardLoop
+                  src="/media/biobuild-card-loop.mp4"
+                  poster="/media/biobuild-card-poster.jpg"
+                  alt="BioBuild Systems homepage."
+                />
+                <div
+                  className="absolute inset-0 bg-[linear-gradient(180deg,transparent_82%,var(--card))]"
+                  aria-hidden="true"
+                />
+              </div>
+            ) : (
+              <CardLoop
+                src="/media/biobuild-card-loop.mp4"
+                poster="/media/biobuild-card-poster.jpg"
+                alt="BioBuild Systems homepage."
+              />
+            )
           ) : (
             <Image
               src={item.imageUrl}
@@ -80,15 +100,17 @@ export function WorkCard({
               priority={layout === 'rail'}
             />
           )}
-          <div
-            className={cn(
-              'absolute inset-0',
-              playLoop
-                ? 'bg-[linear-gradient(180deg,transparent_82%,var(--card))]'
-                : 'bg-[linear-gradient(180deg,transparent_40%,var(--card))]',
-            )}
-            aria-hidden="true"
-          />
+          {equalHeight && playLoop ? null : (
+            <div
+              className={cn(
+                'absolute inset-0',
+                playLoop
+                  ? 'bg-[linear-gradient(180deg,transparent_82%,var(--card))]'
+                  : 'bg-[linear-gradient(180deg,transparent_40%,var(--card))]',
+              )}
+              aria-hidden="true"
+            />
+          )}
           {item.mediaBadge ? (
             <Badge
               variant="moss"
@@ -100,7 +122,15 @@ export function WorkCard({
           ) : null}
         </>
       ) : null}
-      {showVisual ? <CardVisual slug={item.caseSlug} /> : null}
+      {showVisual ? (
+        equalHeight ? (
+          <div data-rail-media-content="" className="w-full shrink-0">
+            <CardVisual slug={item.caseSlug} />
+          </div>
+        ) : (
+          <CardVisual slug={item.caseSlug} />
+        )
+      ) : null}
       {item.status === 'tbd' && !showVisual ? (
         <div className="relative size-full bg-secondary">
           <div
@@ -138,43 +168,8 @@ export function WorkCard({
     </div>
   )
 
-  const body = (
-    <Card
-      className={cn(
-        'relative h-full gap-0 overflow-hidden rounded-2xl py-0 ring-0',
-        equalHeight && 'min-h-0 flex-1 flex-col',
-        shell[item.status],
-        goldCase && 'luminous border-primary/30',
-      )}
-    >
-      {item.status === 'filled' && !goldCase ? (
-        <span className="absolute inset-y-0 left-0 z-20 w-[3px] bg-moss" aria-hidden="true" />
-      ) : null}
-      {goldCase || item.status === 'summary' || item.status === 'card' ? (
-        <span className="absolute inset-y-0 left-0 z-20 w-[3px] bg-primary" aria-hidden="true" />
-      ) : null}
-      {item.status === 'tbd' ? (
-        <span
-          className="absolute inset-y-0 left-0 z-20 w-[3px] origin-top scale-y-0 bg-crimson transition-transform duration-500 group-hover:scale-y-100 motion-reduce:transition-none"
-          aria-hidden="true"
-        />
-      ) : null}
-      {item.status !== 'reserved' ? (
-        <span
-          className={cn(
-            'pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100 motion-reduce:transition-none',
-            item.status === 'filled' && !goldCase
-              ? 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--moss)_18%,transparent),transparent_60%)]'
-              : item.status === 'tbd'
-                ? 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--crimson)_18%,transparent),transparent_60%)]'
-                : 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--primary)_16%,transparent),transparent_60%)]',
-          )}
-          aria-hidden="true"
-        />
-      ) : null}
-
-      {media}
-
+  const cardCopy = (
+    <>
       <CardHeader className="relative z-20 px-5 pt-5 md:px-6">
         <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.18em] uppercase">
           <span
@@ -261,6 +256,51 @@ export function WorkCard({
           </span>
         ) : null}
       </CardFooter>
+    </>
+  )
+
+  const body = (
+    <Card
+      className={cn(
+        'relative h-full gap-0 overflow-hidden rounded-2xl py-0 ring-0',
+        equalHeight && 'min-h-0 flex-1 flex-col',
+        shell[item.status],
+        goldCase && 'luminous border-primary/30',
+      )}
+    >
+      {item.status === 'filled' && !goldCase ? (
+        <span className="absolute inset-y-0 left-0 z-20 w-[3px] bg-moss" aria-hidden="true" />
+      ) : null}
+      {goldCase || item.status === 'summary' || item.status === 'card' ? (
+        <span className="absolute inset-y-0 left-0 z-20 w-[3px] bg-primary" aria-hidden="true" />
+      ) : null}
+      {item.status === 'tbd' ? (
+        <span
+          className="absolute inset-y-0 left-0 z-20 w-[3px] origin-top scale-y-0 bg-crimson transition-transform duration-500 group-hover:scale-y-100 motion-reduce:transition-none"
+          aria-hidden="true"
+        />
+      ) : null}
+      {item.status !== 'reserved' ? (
+        <span
+          className={cn(
+            'pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100 motion-reduce:transition-none',
+            item.status === 'filled' && !goldCase
+              ? 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--moss)_18%,transparent),transparent_60%)]'
+              : item.status === 'tbd'
+                ? 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--crimson)_18%,transparent),transparent_60%)]'
+                : 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--primary)_16%,transparent),transparent_60%)]',
+          )}
+          aria-hidden="true"
+        />
+      ) : null}
+
+      {media}
+
+      {equalHeight ? (
+        <div className="flex h-full min-h-0 flex-col">{cardCopy}</div>
+      ) : (
+        cardCopy
+      )}
     </Card>
   )
 
@@ -285,7 +325,9 @@ export function WorkCard({
           {body}
         </Link>
       ) : (
-        <div className={cn('group h-full', equalHeight && 'flex min-h-0 flex-1 flex-col')}>{body}</div>
+        <div className={cn('group h-full', equalHeight && 'flex min-h-0 flex-1 flex-col')}>
+          {body}
+        </div>
       )}
     </div>
   )
