@@ -14,7 +14,7 @@ const releaseRows = [
 function IllustrationCaption({ label, description }: { label: string; description?: string }) {
   return (
     <figcaption className="mb-2 min-w-0 font-mono text-[9px] tracking-[0.06em] text-primary uppercase @[16rem]:text-[10px] @[16rem]:tracking-[0.1em] @[22rem]:text-[11px] @[22rem]:tracking-[0.14em]">
-      <span className="block truncate">{label}</span>
+      <span className="block whitespace-normal">{label}</span>
       {description ? <span className="sr-only">{description}</span> : null}
     </figcaption>
   )
@@ -316,9 +316,9 @@ export function TokenThemeDiagram({ variant = 'compact' }: { variant?: 'compact'
           description="Illustration of generic components, a color token output for iOS, Android, and web, and the same component in a T-Mobile theme and a Metro theme. Not a screenshot. The colors stand in for the two themes and are not official brand values."
         />
       ) : (
-        <figcaption className="mb-3 flex min-w-0 items-baseline gap-3 font-mono text-[11px] tracking-[0.16em] uppercase">
+        <figcaption className="mb-3 flex min-w-0 items-start gap-3 font-mono text-[11px] leading-snug tracking-[0.16em] uppercase">
           <span className="shrink-0 text-primary">Illustration</span>
-          <span className="min-w-0 flex-1 truncate text-right text-muted-foreground/80">
+          <span className="min-w-0 flex-1 text-right whitespace-normal text-muted-foreground/80">
             Components, tokens, themes
           </span>
           <span className="sr-only">
@@ -718,9 +718,9 @@ export function GatedLoopDiagram({ variant = 'compact' }: { variant?: 'compact' 
           description="Illustration of the workflow toolkit, not a screenshot of an internal tool. The loop is spec, parallel build, brand and validation gates, then human approval of every final pull request."
         />
       ) : (
-        <figcaption className="mb-3 flex min-w-0 items-baseline gap-3 font-mono text-[11px] tracking-[0.16em] uppercase">
+        <figcaption className="mb-3 flex min-w-0 items-start gap-3 font-mono text-[11px] leading-snug tracking-[0.16em] uppercase">
           <span className="shrink-0 text-primary">Workflow</span>
-          <span className="min-w-0 flex-1 truncate text-right text-muted-foreground/80">
+          <span className="min-w-0 flex-1 text-right whitespace-normal text-muted-foreground/80">
             Gated loop
           </span>
           <span className="sr-only">
