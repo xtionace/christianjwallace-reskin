@@ -8,7 +8,7 @@ test.describe('Frontend', () => {
 
     const heading = page.locator('h1').first()
 
-    await expect(heading).toContainText('Sites that move')
-    await expect(page.getByRole('link', { name: 'Book a call' }).first()).toBeVisible()
+    await expect(heading).toContainText('I make complex products')
+    await expect(page.getByRole('link', { name: 'Get in touch' }).first()).toBeVisible()
   })
 })

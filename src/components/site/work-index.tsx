@@ -19,12 +19,16 @@ export function WorkIndex({
   projects: ProjectContent[]
 }) {
   const [filter, setFilter] = useState<Filter>('all')
-  const filters: { id: Filter; label: string }[] = [
+  const filterDefs: { id: Filter; label: string }[] = [
     { id: 'all', label: block(page, 'filter-all')?.label ?? 'All' },
     { id: 'filled', label: block(page, 'filter-filled')?.label ?? 'Case studies' },
+    { id: 'summary', label: block(page, 'filter-summary')?.label ?? 'Summaries' },
     { id: 'tbd', label: block(page, 'filter-tbd')?.label ?? 'Pending clearance' },
     { id: 'reserved', label: block(page, 'filter-reserved')?.label ?? 'Reserved' },
   ]
+  const filters = filterDefs.filter(
+    (item) => item.id === 'all' || projects.some((project) => project.status === item.id),
+  )
   const visible = useMemo(
     () => (filter === 'all' ? projects : projects.filter((project) => project.status === filter)),
     [filter, projects],

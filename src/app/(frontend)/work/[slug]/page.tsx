@@ -24,7 +24,7 @@ export default async function WorkCasePage({ params }: Args) {
   const { slug } = await params
   const portfolio = await getPortfolio()
   const project = caseProject(portfolio.projects, slug)
-  if (!project || project.kind === 'reserved') notFound()
+  if (!project || project.kind === 'reserved' || project.kind === 'card') notFound()
 
   return <CaseStudy portfolio={portfolio} project={project} />
 }

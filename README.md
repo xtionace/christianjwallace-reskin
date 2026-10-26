@@ -40,19 +40,19 @@ Locked design: **E — Kinetic Craft Chromatic** (Round 2, artifact v3, solid go
 - Editor: https://www.magicpatterns.com/c/2gaw495c1akfgcmj8engha
 - Artifact: `00601bd3-f015-45fe-a210-62f5e6017246`
 
-Hierarchy matches that scrape: Home, Work index, About, Contact, the BioBuild case, and corporate placeholders. One primary **Book a call** above the fold; the nav keeps a sticky hire button.
+Public pages: Home, Work index, About, Contact, and case studies for BioBuild, AT&T, and T-Mobile. The nav keeps a **Get in touch** link.
 
 ## Routes
 
 | Path             | What it is                                                |
 | ---------------- | --------------------------------------------------------- |
 | `/`              | Hero, Selected Work rail, process forms, closing CTA      |
-| `/work`          | 12-slot index with filters                                |
-| `/work/biobuild` | The only filled case study                                |
-| `/work/att`      | AT&T placeholder (slots 02 and 03)                        |
-| `/work/t-mobile` | T-Mobile placeholder (slots 04 and 05)                    |
+| `/work`          | Work index of real roles                                  |
+| `/work/biobuild` | BioBuild case study                                       |
+| `/work/att`      | AT&T case study                                           |
+| `/work/t-mobile` | T-Mobile case study                                       |
 | `/about`         | Lineage from the résumé, plus study notes                 |
-| `/contact`       | Book a call (mailto) and Start a project (saved in admin) |
+| `/contact`       | A short call (mailto) and a note saved in admin           |
 | `/admin`         | Stock Payload admin                                       |
 
 `/robots.txt` disallows indexing, matching the footer line “Private prototype — not indexed.” Remove that disallow in `src/app/robots.ts`, and clear the preview badge and footer note in Site settings, when the site should be public.
@@ -61,9 +61,9 @@ Hierarchy matches that scrape: Home, Work index, About, Contact, the BioBuild ca
 
 Sign in at `/admin`. Portfolio collections:
 
-- **Site settings** — name, email (`xtionace@gmail.com`), LinkedIn, location, nav, footer, the sticky “Book a call” label. Do not add a personal phone.
+- **Site settings** — name, email (`xtionace@gmail.com`), LinkedIn, location, nav, footer, the sticky “Get in touch” label. Do not add a personal phone.
 - **Pages** — Home, Work, About, and Contact copy. Open the **Home** page. Blocks are keyed (`hero-line-1`, `log-heading`, `scroll-cue`, `selected`, `process`, `process-prefix`, `form-01`, `closing`, …). Change the words; leave the keys in place so the layout can find them. The homepage hero, session log, selected-work heading, process forms, and closing call to action all read these blocks.
-- **Projects** — the 12 work slots. Cards with **Show on rail** appear in the homepage Selected Work rail (title, summary, tags, status label, and image badge). BioBuild is filled. AT&T and T-Mobile stay “pending clearance” until real screenshots exist. Reserved slots are empty on purpose.
+- **Projects** — the work index. BioBuild, AT&T, and T-Mobile are filled case studies. Earlier roles are short cards with coded illustrations, not photos. Cards with **Show on rail** appear in the homepage Selected Work rail.
 - **Inquiries** — messages from the contact form. Nothing is emailed (no paid mail service). Reply yourself from the address in Site settings.
 - **Media** — optional uploads. The BioBuild plates currently use the CDN URLs already in the E scrape. Do not invent logos or stock photos.
 
@@ -71,12 +71,27 @@ Seed copy lives in `src/content/portfolio.ts` and is inserted only when a collec
 
 ## Environment
 
-| Variable         | Purpose                                       |
-| ---------------- | --------------------------------------------- |
-| `DATABASE_URL`   | SQLite file URL, e.g. `file:./reskin-base.db` |
-| `PAYLOAD_SECRET` | Secret for Payload auth and encryption        |
+| Variable         | Purpose                                                                           |
+| ---------------- | --------------------------------------------------------------------------------- |
+| `PAYLOAD_SECRET` | Required. Secret for Payload auth and encryption. Read only from the environment. |
+| `DATABASE_URL`   | Optional SQLite file URL. Local default is `file:./reskin-base.db`.               |
 
-Copy `.env.example` to `.env`. Never commit `.env` or `*.db`. If those variables are missing, the app falls back to `file:./reskin-base.db` and a local-only secret so `pnpm build` can run. Set a real `PAYLOAD_SECRET` before anyone else uses `/admin`.
+Copy `.env.example` to `.env`. Never commit `.env` or `*.db`. `PAYLOAD_SECRET` has no hard-coded fallback.
+
+### Vercel preview
+
+A preview deployment (`VERCEL_ENV=preview`) does not need a hosted database. If `DATABASE_URL` is unset, Payload uses `file:/tmp/portfolio.db`, runs the SQL migrations, and seeds the public copy on startup. That file is temporary. Do not set domain or redirect rules in `vercel.json` for this.
+
+Preview responses send `noindex, nofollow` (robots metadata on the public layout, plus `X-Robots-Tag` when `VERCEL_ENV` is `preview`).
+
+Set this on the Vercel project for Preview:
+
+| Variable         | Required | Notes                                   |
+| ---------------- | -------- | --------------------------------------- |
+| `PAYLOAD_SECRET` | Yes      | Long random string. Not committed.      |
+| `DATABASE_URL`   | No       | Leave unset so the preview uses `/tmp`. |
+
+`VERCEL_ENV` is set by Vercel. Do not add it yourself.
 
 Production boot runs the SQL migration in `src/migrations` so a fresh SQLite file gets its tables. Development still syncs the schema on startup.
 
@@ -93,8 +108,10 @@ Production boot runs the SQL migration in `src/migrations` so a fresh SQLite fil
 
 ## Intentional gaps
 
-- AT&T and T-Mobile have no screenshots, product names, or metrics. Those pages are NDA-safe stubs.
-- Slots 06–12 are reserved. Tru-Line is not listed.
+- AT&T is a case study from the interview notes: two AI toolkits, a coded gated-loop diagram, and shipping velocity written as 5-10 PRs a month to 40. No internal screenshots or internal tool names.
+- T-Mobile is a case study from the interview notes: consumer design system, a Metro theme on the same components, and color tokens for iOS, Android, and web. The diagram is coded. No screenshots and no internal tool names.
+- Earlier employers are short cards. Xbox uses a placeholder release table, labeled as an illustration — not real game names or release data.
+- There are no reserved slots. Tru-Line is not listed.
 - BioBuild images are the three Magic Patterns CDN plates from the E scrape, not photos from the Fibercrete archive.
 - No public phone number.
 - Contact form stores inquiries in SQLite. It does not send mail.

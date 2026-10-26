@@ -30,7 +30,7 @@ export function CaseMeta({
         <span
           className={cn(
             'absolute inset-y-0 left-0 w-[3px]',
-            accent === 'moss' ? 'bg-moss' : 'bg-crimson',
+            accent === 'moss' ? 'bg-moss' : accent === 'gold' ? 'bg-primary' : 'bg-crimson',
           )}
           aria-hidden="true"
         />
@@ -81,7 +81,7 @@ export function CaseMeta({
         {log && log.length > 0 ? (
           <div className="border-t border-border px-6 pt-5 pb-6">
             <p className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground/60 uppercase">
-              Session log
+              Notes
             </p>
             <ol className="mt-3 flex flex-col gap-2">
               {log.map((entry) => (

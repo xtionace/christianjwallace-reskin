@@ -92,13 +92,20 @@ function mapSettings(settings: SiteSettingsContent) {
 }
 
 const homepageChrome: Block[] = [
-  { key: 'log-heading', label: 'Session log' },
+  { key: 'log-heading', label: 'Now' },
   { key: 'scroll-cue', label: 'Selected work' },
   { key: 'process-prefix', label: 'Form' },
 ]
 
 function chromeFor(status: unknown) {
-  if (status === 'filled' || status === 'tbd' || status === 'reserved') return projectChrome(status)
+  if (
+    status === 'filled' ||
+    status === 'summary' ||
+    status === 'card' ||
+    status === 'tbd' ||
+    status === 'reserved'
+  )
+    return projectChrome(status)
   return projectChrome('reserved' satisfies WorkStatus)
 }
 

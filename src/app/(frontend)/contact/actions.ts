@@ -19,7 +19,7 @@ export async function submitInquiry(_previous: InquiryState, formData: FormData)
 
   if (!name) errors.name = 'Please add your name.'
   if (!/^\S+@\S+\.\S+$/.test(email)) errors.email = 'Please enter a valid email.'
-  if (message.length < 10) errors.message = 'A sentence or two helps me prepare.'
+  if (message.length < 10) errors.message = 'Please write a sentence or two.'
   if (Object.keys(errors).length > 0) {
     return { status: 'error', errors, formError: 'Please fix the highlighted fields.' }
   }

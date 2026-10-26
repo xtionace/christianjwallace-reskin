@@ -1,5 +1,5 @@
-export type WorkStatus = 'filled' | 'tbd' | 'reserved'
-export type ProjectKind = 'case' | 'corporate' | 'reserved'
+export type WorkStatus = 'filled' | 'summary' | 'card' | 'tbd' | 'reserved'
+export type ProjectKind = 'case' | 'corporate' | 'card' | 'reserved'
 export type Accent = 'moss' | 'crimson' | 'gold'
 export type PlateAspect = 'wide' | 'landscape' | 'portrait'
 export type GalleryPlacement = 'hero' | 'problem' | 'approach'

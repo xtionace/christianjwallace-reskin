@@ -28,11 +28,11 @@ export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   metadataBase: new URL('https://christianjwallace.com'),
   title: {
-    default: 'Christian Wallace — Web design & frontend craft',
+    default: 'Christian Wallace, principal software engineer',
     template: '%s · Christian Wallace',
   },
   description:
-    'Christian Wallace designs and builds websites with enterprise discipline and craftsperson’s care. BioBuild Systems is the filled case; carrier work stays pending clearance.',
+    'Christian Wallace makes complex products feel simple, and he builds the systems that keep them that way.',
   robots: { index: false, follow: false },
 }
 
@@ -41,7 +41,10 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const portfolio = await getPortfolio()
 
   return (
-    <html lang="en" className={`dark ${geistSans.variable} ${geistMono.variable} ${display.variable}`}>
+    <html
+      lang="en"
+      className={`dark ${geistSans.variable} ${geistMono.variable} ${display.variable}`}
+    >
       <body className="flex min-h-svh flex-col bg-background font-sans text-foreground antialiased">
         <a
           href="#main"

@@ -10,6 +10,32 @@ import { block, blocksByPrefix, pageBySlug } from '@/content/types'
 import { getPortfolio } from '@/lib/get-portfolio'
 import { cn } from '@/lib/utils'
 
+function ExperienceBody({ body }: { body?: string }) {
+  const lines = (body ?? '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+  if (lines.length === 0) return null
+  const prose = lines.filter((line) => !line.startsWith('• '))
+  const bullets = lines.filter((line) => line.startsWith('• '))
+  return (
+    <>
+      {prose.map((line) => (
+        <p key={line} className="mt-1 text-sm text-muted-foreground">
+          {line}
+        </p>
+      ))}
+      {bullets.length > 0 ? (
+        <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm leading-relaxed text-muted-foreground">
+          {bullets.map((line) => (
+            <li key={line}>{line.slice(2)}</li>
+          ))}
+        </ul>
+      ) : null}
+    </>
+  )
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const portfolio = await getPortfolio()
   const page = pageBySlug(portfolio.pages, 'about')
@@ -31,22 +57,33 @@ export default async function AboutPage() {
       <section className="border-b border-border bg-[linear-gradient(180deg,var(--card),var(--background))]">
         <div className="site-container grid gap-12 py-20 md:py-28 lg:grid-cols-[1.5fr_1fr] lg:items-end">
           <div>
-            <p className="mb-6 font-mono text-xs tracking-[0.22em] text-primary uppercase">{page?.eyebrow}</p>
+            <p className="mb-6 font-mono text-xs tracking-[0.22em] text-primary uppercase">
+              {page?.eyebrow}
+            </p>
             <h1 className="font-display text-5xl leading-[1] font-semibold tracking-[-0.03em] text-foreground md:text-7xl">
               {page?.headline} <span className="text-muted-foreground">{page?.headlineAccent}</span>
             </h1>
-            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">{page?.lede}</p>
+            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+              {page?.lede}
+            </p>
           </div>
           <Card className="luminous gap-0 rounded-2xl bg-card py-0 ring-0">
             <div className="p-6">
-              <p className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground/60 uppercase">{current?.label}</p>
-              <p className="mt-2 font-display text-2xl font-semibold text-foreground">{current?.title}</p>
+              <p className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground/60 uppercase">
+                {current?.label}
+              </p>
+              <p className="mt-2 font-display text-2xl font-semibold text-foreground">
+                {current?.title}
+              </p>
               <p className="text-muted-foreground">{current?.meta}</p>
               <Separator className="my-5" />
-              <p className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground/60 uppercase">Also</p>
+              <p className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground/60 uppercase">
+                Also
+              </p>
               <p className="mt-2 text-foreground">{current?.kicker}</p>
               <p className="mt-5 inline-flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="size-4 text-primary" aria-hidden="true" /> {portfolio.settings.location}
+                <MapPin className="size-4 text-primary" aria-hidden="true" />{' '}
+                {portfolio.settings.location}
               </p>
             </div>
           </Card>
@@ -66,23 +103,36 @@ export default async function AboutPage() {
         />
         <ol className="relative mt-16 border-l border-border pl-8 md:pl-12">
           {experience.map((item, index) => (
-            <Reveal key={item.key} as="li" delay={index * 0.04} className="relative pb-10 last:pb-0">
+            <Reveal
+              key={item.key}
+              as="li"
+              delay={index * 0.04}
+              className="relative pb-10 last:pb-0"
+            >
               <span
                 className={cn(
                   'absolute top-2 -left-[37px] size-2.5 rounded-full ring-4 ring-background md:-left-[53px]',
-                  index === 0 ? 'bg-primary shadow-[0_0_14px_rgba(212,175,55,0.7)]' : 'bg-muted-foreground/40',
+                  index === 0
+                    ? 'bg-primary shadow-[0_0_14px_rgba(212,175,55,0.7)]'
+                    : 'bg-muted-foreground/40',
                 )}
                 aria-hidden="true"
               />
               <div className="group -m-4 grid gap-2 rounded-2xl border border-transparent p-4 transition-colors hover:border-white/6 hover:bg-card md:grid-cols-[220px_1fr] md:gap-8">
                 <div>
-                  <p className="font-display text-2xl font-semibold text-foreground">{item.title}</p>
+                  <p className="font-display text-2xl font-semibold text-foreground">
+                    {item.title}
+                  </p>
                   {item.kicker ? <p className="text-sm text-violet-soft">{item.kicker}</p> : null}
                 </div>
                 <div>
-                  {item.label ? <p className="text-base font-medium text-foreground">{item.label}</p> : null}
-                  {item.meta ? <p className="font-mono text-xs tracking-[0.12em] text-primary">{item.meta}</p> : null}
-                  <p className="mt-1 text-sm text-muted-foreground">{item.body}</p>
+                  {item.label ? (
+                    <p className="text-base font-medium text-foreground">{item.label}</p>
+                  ) : null}
+                  {item.meta ? (
+                    <p className="font-mono text-xs tracking-[0.12em] text-primary">{item.meta}</p>
+                  ) : null}
+                  <ExperienceBody body={item.body} />
                 </div>
               </div>
             </Reveal>
@@ -97,9 +147,18 @@ export default async function AboutPage() {
           </h2>
           <ul className="grid gap-5 md:grid-cols-3">
             {disciplines.map((item, index) => (
-              <Reveal key={item.key} as="li" delay={index * 0.08} className="luminous rounded-2xl bg-background/60 p-6">
-                <span className="font-mono text-[11px] tracking-[0.2em] text-primary">0{index + 1}</span>
-                <p className="mt-4 font-display text-xl font-semibold text-foreground">{item.title}</p>
+              <Reveal
+                key={item.key}
+                as="li"
+                delay={index * 0.08}
+                className="luminous rounded-2xl bg-background/60 p-6"
+              >
+                <span className="font-mono text-[11px] tracking-[0.2em] text-primary">
+                  0{index + 1}
+                </span>
+                <p className="mt-4 font-display text-xl font-semibold text-foreground">
+                  {item.title}
+                </p>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
               </Reveal>
             ))}

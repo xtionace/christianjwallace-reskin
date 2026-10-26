@@ -17,6 +17,14 @@ import { seedPortfolio } from './seed'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+/** Preview deploys have a read-only project directory. Seed a throwaway SQLite file under /tmp. */
+function databaseUrl() {
+  const configured = process.env.DATABASE_URL?.trim()
+  if (configured) return configured
+  if (process.env.VERCEL_ENV === 'preview') return 'file:/tmp/portfolio.db'
+  return 'file:./reskin-base.db'
+}
+
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -27,7 +35,7 @@ export default buildConfig({
   collections: [Users, Media, Pages, Projects, Inquiries],
   globals: [SiteSettings],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || 'local-build-only-set-PAYLOAD_SECRET',
+  secret: process.env.PAYLOAD_SECRET || '',
   onInit: async (payload) => {
     if (process.env.NEXT_PHASE === 'phase-production-build') return
     if (process.env.PAYLOAD_MIGRATING === 'true') return
@@ -42,9 +50,10 @@ export default buildConfig({
   },
   db: sqliteAdapter({
     client: {
-      url: process.env.DATABASE_URL || 'file:./reskin-base.db',
+      url: databaseUrl(),
     },
     prodMigrations: migrations,
+    busyTimeout: process.env.VERCEL_ENV === 'preview' ? 5000 : 0,
   }),
   sharp,
   plugins: [],

@@ -42,7 +42,7 @@ export function ContactForm({
     status: 'idle',
     errors: {},
   } satisfies InquiryState)
-  const [type, setType] = useState(projectTypes[0] ?? 'New website')
+  const [type, setType] = useState(projectTypes[0] ?? 'Saying hello')
   const [dismissed, setDismissed] = useState(false)
   const sent = state.status === 'sent' && !dismissed && !pending
 
@@ -106,14 +106,14 @@ export function ContactForm({
                   type="email"
                   autoComplete="email"
                   aria-invalid={Boolean(state.errors?.email)}
-                  placeholder="you@company.com"
+                  placeholder="you@email.com"
                   className="h-11"
                 />
                 <FieldError>{state.errors?.email}</FieldError>
               </Field>
             </div>
             <FieldSet>
-              <FieldLegend variant="label">Project type</FieldLegend>
+              <FieldLegend variant="label">Topic</FieldLegend>
               <input type="hidden" name="projectType" value={type} />
               <ToggleGroup
                 variant="outline"
@@ -123,7 +123,7 @@ export function ContactForm({
                   const next = groupValue[groupValue.length - 1]
                   if (next) setType(next)
                 }}
-                aria-label="Project type"
+                aria-label="Topic"
                 className="flex w-full flex-wrap"
               >
                 {projectTypes.map((item) => (
@@ -138,13 +138,13 @@ export function ContactForm({
               </ToggleGroup>
             </FieldSet>
             <Field data-invalid={Boolean(state.errors?.message) || undefined}>
-              <FieldLabel htmlFor="message">What are you building?</FieldLabel>
+              <FieldLabel htmlFor="message">Message</FieldLabel>
               <Textarea
                 id="message"
                 name="message"
                 rows={5}
                 aria-invalid={Boolean(state.errors?.message)}
-                placeholder="A few sentences about the project, timing, and goals."
+                placeholder="A few sentences is plenty."
               />
               <FieldError>{state.errors?.message}</FieldError>
             </Field>
