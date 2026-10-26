@@ -61,7 +61,7 @@ Indexing follows `VERCEL_ENV`. A preview deployment (`VERCEL_ENV=preview`) sends
 
 Sign in at `/admin`. Portfolio collections:
 
-- **Site settings** — name, email (`xtionace@gmail.com`), LinkedIn, location, nav, footer, the sticky “Get in touch” label. Do not add a personal phone.
+- **Site settings** — name, email (`contact@christianjwallace.com`), LinkedIn, location, nav, footer, the sticky “Get in touch” label. Do not add a personal phone.
 - **Pages** — Home, Work, About, and Contact copy. Open the **Home** page. Blocks are keyed (`hero-line-1`, `log-heading`, `scroll-cue`, `selected`, `process`, `process-prefix`, `form-01`, `closing`, …). Change the words; leave the keys in place so the layout can find them. The homepage hero, session log, selected-work heading, process forms, and closing call to action all read these blocks.
 - **Projects** — the work index. BioBuild, AT&T, and T-Mobile are filled case studies. Earlier roles are short cards with coded illustrations, not photos. Cards with **Show on rail** appear in the homepage Selected Work rail.
 - **Inquiries** — messages from the contact form. Nothing is emailed (no paid mail service). Reply yourself from the address in Site settings.

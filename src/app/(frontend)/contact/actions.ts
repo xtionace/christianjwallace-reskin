@@ -2,6 +2,7 @@
 
 import { getPayload } from 'payload'
 
+import { defaultPortfolio } from '@/content/portfolio'
 import config from '@/payload.config'
 
 export type InquiryState = {
@@ -37,7 +38,7 @@ export async function submitInquiry(_previous: InquiryState, formData: FormData)
     return {
       status: 'error',
       errors: {},
-      formError: 'Could not save the message. Email xtionace@gmail.com directly.',
+      formError: `Could not save the message. Email ${defaultPortfolio.settings.email} directly.`,
     }
   }
 }

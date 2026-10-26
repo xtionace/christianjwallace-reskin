@@ -83,6 +83,13 @@ function mapProject(project: ProjectContent) {
   }
 }
 
+/** True when site settings still store the previous public Gmail address. */
+function isPreviousPublicEmail(value: unknown) {
+  if (typeof value !== 'string') return false
+  const [local, domain] = value.trim().toLowerCase().split('@')
+  return local === 'xtionace' && domain === 'gmail.com'
+}
+
 function mapSettings(settings: SiteSettingsContent) {
   return {
     name: settings.name,
@@ -226,6 +233,12 @@ export async function seedPortfolio(payload: Payload) {
       data: mapSettings(defaultPortfolio.settings),
     })
     payload.logger.info('Seeded site settings')
+  } else if (isPreviousPublicEmail(settings.email)) {
+    await payload.updateGlobal({
+      slug: 'site-settings',
+      data: { email: defaultPortfolio.settings.email },
+    })
+    payload.logger.info('Updated the public email on site settings')
   }
 
   const pages = await payload.find({ collection: 'pages', limit: 1 })

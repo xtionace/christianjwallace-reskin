@@ -68,7 +68,7 @@ Names only. Do not commit values. Set Production and Preview separately on `chri
 | `VERCEL_ENV` | Set by Vercel | Indexing switch. `preview` is noindex (robots meta, `/robots.txt`, empty sitemap, preview badge). `production` is indexable. |
 | `BLOB_READ_WRITE_TOKEN` | Only if Blob is added later | Vercel Blob read/write token. Not required now. |
 | `RESEND_API_KEY` | Only if notification mail is added later | Resend API key. The contact form does not send mail today. |
-| `CONTACT_TO_EMAIL` | With the mail feature | Suggested value `xtionace@gmail.com`. |
+| `CONTACT_NOTIFY_TO` | With the mail feature | Default `contact@christianjwallace.com`. |
 | `CONTACT_FROM_EMAIL` | With the mail feature | A sender on a domain the mail provider has verified. |
 
 Preview can leave `DATABASE_URL` unset. The app then uses `file:/tmp/portfolio.db`, migrates, and seeds. That file disappears with the instance. Do not point Preview at the production database.
@@ -112,4 +112,4 @@ Before saving the A record, remove other A and AAAA records on the apex that poi
 
 After DreamHost saves the records, check the Vercel domain card until it reports a valid configuration. The certificate is issued after that. Propagation is not instant.
 
-DreamHost mail for the domain stays as it is. The public contact address `xtionace@gmail.com` is Gmail and is not affected by these records.
+DreamHost mail for the domain stays as it is. The public address is `contact@christianjwallace.com`, so the existing MX records are what deliver that mail. Do not replace them when the A record is added.

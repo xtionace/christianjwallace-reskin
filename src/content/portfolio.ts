@@ -647,7 +647,7 @@ export const defaultPortfolio: Portfolio = {
   settings: {
     name: 'Christian Wallace',
     roleLine: 'Web design · Frontend craft',
-    email: 'xtionace@gmail.com',
+    email: 'contact@christianjwallace.com',
     linkedinUrl: 'https://www.linkedin.com/in/christianjwallace',
     linkedinLabel: 'in/christianjwallace',
     location: 'Lynnwood / Seattle area',
