@@ -45,7 +45,7 @@ export function CaseMeta({
           ))}
         </dl>
         {tags && tags.length > 0 ? (
-          <div className="border-t border-border px-6 pt-5 pb-6">
+          <div className="border-t border-border px-6 pt-copy pb-6">
             <p className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
               Stack
             </p>
@@ -79,7 +79,7 @@ export function CaseMeta({
           </div>
         ) : null}
         {log && log.length > 0 ? (
-          <div className="border-t border-border px-6 pt-5 pb-6">
+          <div className="border-t border-border px-6 pt-copy pb-6">
             <p className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
               Notes
             </p>

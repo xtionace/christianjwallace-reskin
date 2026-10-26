@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button'
 import type { ProjectContent } from '@/content/types'
 import { cn } from '@/lib/utils'
 
-const railPadding = 'max(1.5rem, calc((100vw - 1320px) / 2 + 1.5rem))'
+const railPadding =
+  'max(var(--space-section), calc((100vw - 1320px) / 2 + var(--space-section)))'
 
 export function WorkRail({ items, label }: { items: ProjectContent[]; label?: string }) {
   const trackRef = useRef<HTMLDivElement>(null)

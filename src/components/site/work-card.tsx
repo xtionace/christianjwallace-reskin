@@ -230,7 +230,7 @@ export function WorkCard({
           <p className="text-sm text-muted-foreground">{item.client}</p>
         )}
       </CardHeader>
-      <CardContent className={cn('relative z-20 px-5 md:px-6', equalHeight && 'flex-1')}>
+      <CardContent className={cn('relative z-20 px-5 pb-copy md:px-6', equalHeight && 'grow')}>
         <p className="text-sm leading-relaxed text-muted-foreground/80">{cardBlurb}</p>
         {item.status === 'summary' ? (
           <p className="mt-3 text-xs text-primary">Full case study coming later.</p>
@@ -238,7 +238,7 @@ export function WorkCard({
       </CardContent>
       <CardFooter
         className={cn(
-          'relative z-20 items-end justify-between gap-3 px-5 pt-5 pb-5 md:px-6 md:pb-6',
+          'relative z-20 items-end justify-between gap-3 px-5 pt-copy pb-copy md:px-6 md:pb-section',
           (layout === 'grid' || equalHeight) && 'mt-auto',
         )}
       >
@@ -275,7 +275,7 @@ export function WorkCard({
     <Card
       className={cn(
         'relative h-full gap-0 overflow-hidden rounded-2xl py-0 ring-0',
-        equalHeight && 'min-h-0 flex-1 flex-col',
+        equalHeight && 'min-h-min flex-1 flex-col',
         shell[item.status],
         goldCase && 'luminous border-primary/30',
       )}
@@ -309,7 +309,7 @@ export function WorkCard({
       {media}
 
       {equalHeight ? (
-        <div className="flex h-full min-h-0 flex-col">{cardCopy}</div>
+        <div className="flex min-h-min w-full flex-1 flex-col">{cardCopy}</div>
       ) : (
         cardCopy
       )}
@@ -321,7 +321,7 @@ export function WorkCard({
       id={item.caseSlug ? `work-card-${item.caseSlug}` : undefined}
       data-project={item.caseSlug || undefined}
       className={cn(
-        equalHeight ? 'flex h-full w-full flex-1 flex-col' : 'h-full w-full',
+        equalHeight ? 'flex h-full w-full min-h-min flex-1 flex-col' : 'h-full w-full',
         linked &&
           'transition-transform duration-300 hover:-translate-y-1.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0',
       )}
@@ -331,13 +331,13 @@ export function WorkCard({
           href={item.href}
           className={cn(
             'group h-full rounded-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background focus-visible:outline-none',
-            equalHeight ? 'flex min-h-0 flex-1 flex-col' : 'block',
+            equalHeight ? 'flex min-h-min flex-1 flex-col' : 'block',
           )}
         >
           {body}
         </Link>
       ) : (
-        <div className={cn('group h-full', equalHeight && 'flex min-h-0 flex-1 flex-col')}>
+        <div className={cn('group h-full', equalHeight && 'flex min-h-min flex-1 flex-col')}>
           {body}
         </div>
       )}

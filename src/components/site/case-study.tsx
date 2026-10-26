@@ -209,7 +209,7 @@ export function CaseStudy({
                       />
                     </div>
                     {problem.caption ? (
-                      <figcaption className="border-t border-border bg-card px-5 py-3 font-mono text-[11px] tracking-[0.18em] text-muted-foreground/70 uppercase">
+                      <figcaption className="border-t border-border bg-card px-5 py-copy font-mono text-[11px] tracking-[0.18em] text-muted-foreground/70 uppercase">
                         {problem.caption}
                       </figcaption>
                     ) : null}
