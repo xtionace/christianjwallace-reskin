@@ -71,6 +71,7 @@ export function WorkIndex({
             delay={(index % 3) * 0.06}
             className={cn(
               item.status === 'filled' && filter === 'all' ? 'sm:col-span-2' : undefined,
+              item.caseSlug === 'biobuild' && 'self-start',
             )}
           >
             <WorkCard

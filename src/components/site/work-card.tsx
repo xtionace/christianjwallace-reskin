@@ -47,9 +47,11 @@ export function WorkCard({
     <div
       className={cn(
         'relative w-full',
-        layout === 'rail' && 'flex grow flex-col justify-center',
+        layout === 'rail' && !playLoop && 'flex grow flex-col justify-center',
         lockAspect && 'overflow-hidden',
-        lockAspect && (layout === 'rail' ? 'aspect-[16/10] min-h-0' : mediaAspect),
+        // The BioBuild loop is 736×488. Match that frame so the picture is not cropped.
+        playLoop && 'aspect-[736/488] bg-card',
+        lockAspect && !playLoop && (layout === 'rail' ? 'aspect-[16/10] min-h-0' : mediaAspect),
       )}
     >
       {item.status === 'filled' && item.imageUrl ? (
@@ -75,7 +77,12 @@ export function WorkCard({
             />
           )}
           <div
-            className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,var(--card))]"
+            className={cn(
+              'absolute inset-0',
+              playLoop
+                ? 'bg-[linear-gradient(180deg,transparent_82%,var(--card))]'
+                : 'bg-[linear-gradient(180deg,transparent_40%,var(--card))]',
+            )}
             aria-hidden="true"
           />
           {item.mediaBadge ? (
