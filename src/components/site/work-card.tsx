@@ -18,19 +18,22 @@ const shell: Record<WorkStatus, string> = {
   reserved: 'border border-dashed border-white/12 bg-background/60',
 }
 
+/** Filled case studies use the wide card. Everything else uses the grid card. */
+export function workCardLayout(item: ProjectContent): 'rail' | 'grid' {
+  return item.status === 'filled' ? 'rail' : 'grid'
+}
+
 export function WorkCard({
   item,
   layout = 'grid',
-  playLoop = false,
-  cardBlurb,
   headingLevel = 'h3',
 }: {
   item: ProjectContent
   layout?: 'rail' | 'grid'
-  playLoop?: boolean
-  cardBlurb?: string
   headingLevel?: 'h2' | 'h3'
 }) {
+  const playLoop = item.caseSlug === 'biobuild'
+  const cardBlurb = item.cardSummary || item.summary
   const mediaAspect = layout === 'rail' ? 'aspect-[16/10]' : 'aspect-[4/3]'
   const linked = Boolean(item.href) && item.kind !== 'card' && item.kind !== 'reserved'
   const showVisual = hasCardVisual(item.caseSlug)
@@ -209,9 +212,7 @@ export function WorkCard({
         )}
       </CardHeader>
       <CardContent className="relative z-20 px-5 md:px-6">
-        <p className="text-sm leading-relaxed text-muted-foreground/80">
-          {cardBlurb || item.summary}
-        </p>
+        <p className="text-sm leading-relaxed text-muted-foreground/80">{cardBlurb}</p>
         {item.status === 'summary' ? (
           <p className="mt-3 text-xs text-primary">Full case study coming later.</p>
         ) : null}

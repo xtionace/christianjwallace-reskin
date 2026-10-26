@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-import { WorkCard } from '@/components/site/work-card'
+import { WorkCard, workCardLayout } from '@/components/site/work-card'
 import { Button } from '@/components/ui/button'
 import type { ProjectContent } from '@/content/types'
 import { cn } from '@/lib/utils'
@@ -85,11 +85,7 @@ export function WorkRail({ items, label }: { items: ProjectContent[]; label?: st
             )}
             aria-label={`Slide ${index + 1} of ${items.length}`}
           >
-            <WorkCard
-              item={item}
-              layout="rail"
-              cardBlurb={item.caseSlug === 't-mobile' ? item.cardSummary : undefined}
-            />
+            <WorkCard item={item} layout={workCardLayout(item)} />
           </div>
         ))}
       </div>
