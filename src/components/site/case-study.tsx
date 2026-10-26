@@ -299,7 +299,12 @@ export function CaseStudy({
                     </ul>
                     {project.liveUrl ? (
                       <div className="mt-8">
-                        <CtaLink href={project.liveUrl} external variant="ghost">
+                        <CtaLink
+                          href={project.liveUrl}
+                          external
+                          variant="ghost"
+                          className="h-auto max-w-full min-h-12 py-3 whitespace-normal"
+                        >
                           Visit {project.liveLabel || 'the live site'}
                         </CtaLink>
                       </div>
