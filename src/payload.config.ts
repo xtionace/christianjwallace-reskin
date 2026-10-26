@@ -17,12 +17,29 @@ import { seedPortfolio } from './seed'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-/** Preview deploys have a read-only project directory. Seed a throwaway SQLite file under /tmp. */
+/**
+ * Local and preview stay on a SQLite file. Production on Vercel sets DATABASE_URL
+ * to a libsql:// Turso URL. A postgres URL is ignored so a Neon string cannot be
+ * handed to the SQLite adapter. See docs/production-plan.md.
+ */
 function databaseUrl() {
-  const configured = process.env.DATABASE_URL?.trim()
-  if (configured) return configured
+  const candidates = [
+    process.env.DATABASE_URL,
+    process.env.TURSO_DATABASE_URL,
+    process.env.DATABASE_URI,
+  ]
+  for (const value of candidates) {
+    const trimmed = value?.trim()
+    if (!trimmed) continue
+    if (trimmed.startsWith('postgres://') || trimmed.startsWith('postgresql://')) continue
+    return trimmed
+  }
   if (process.env.VERCEL_ENV === 'preview') return 'file:/tmp/portfolio.db'
   return 'file:./reskin-base.db'
+}
+
+function databaseAuthToken() {
+  return process.env.DATABASE_AUTH_TOKEN?.trim() || process.env.TURSO_AUTH_TOKEN?.trim() || undefined
 }
 
 export default buildConfig({
@@ -36,6 +53,7 @@ export default buildConfig({
   globals: [SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
+  serverURL: process.env.NEXT_PUBLIC_SERVER_URL?.trim() || undefined,
   onInit: async (payload) => {
     if (process.env.NEXT_PHASE === 'phase-production-build') return
     if (process.env.PAYLOAD_MIGRATING === 'true') return
@@ -51,6 +69,7 @@ export default buildConfig({
   db: sqliteAdapter({
     client: {
       url: databaseUrl(),
+      ...(databaseAuthToken() ? { authToken: databaseAuthToken() } : {}),
     },
     prodMigrations: migrations,
     busyTimeout: process.env.VERCEL_ENV === 'preview' ? 5000 : 0,

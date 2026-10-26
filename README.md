@@ -55,7 +55,7 @@ Public pages: Home, Work index, About, Contact, and case studies for BioBuild, A
 | `/contact`       | A short call (mailto) and a note saved in admin           |
 | `/admin`         | Stock Payload admin                                       |
 
-Indexing follows `VERCEL_ENV`. A preview deployment (`VERCEL_ENV=preview`) sends `noindex`, disallows `/` in `/robots.txt`, hides the sitemap, and shows the “Private preview” badge. Any other environment, including a DreamHost production build, allows crawling, publishes `/sitemap.xml`, and hides that badge. Leave the switch in place.
+Indexing follows `VERCEL_ENV`. A preview deployment (`VERCEL_ENV=preview`) sends `noindex`, disallows `/` in `/robots.txt`, hides the sitemap, and shows the “Private preview” badge. Production (`VERCEL_ENV=production`, which Vercel sets itself) allows crawling, publishes `/sitemap.xml`, and hides that badge. Leave the switch in place. The launch plan is `docs/production-plan.md`.
 
 ## Edit content
 
@@ -116,7 +116,7 @@ Production boot runs the SQL migration in `src/migrations` so a fresh SQLite fil
 - No public phone number.
 - Contact form stores inquiries in SQLite. It does not send mail.
 - Earlier résumé roles and education are on About as lineage, not as case studies.
-- Search indexing is off only while `VERCEL_ENV=preview`. Before a public launch: set a real `PAYLOAD_SECRET`, point `DATABASE_URL` at a persistent database (not SQLite in `/tmp`), and create the first user at `/admin`.
+- Search indexing is off only while `VERCEL_ENV=preview`. Launch steps, the Turso recommendation, and the DreamHost DNS records are in `docs/production-plan.md`.
 
 ## License
 
